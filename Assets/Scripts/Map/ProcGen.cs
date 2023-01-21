@@ -38,19 +38,12 @@ sealed class ProcGen : MonoBehaviour
                     }
                     else
                     {
-                        //if not the boundary of the room, set floors
-                        if (MapManager.instance.ObstacleMap.GetTile(new Vector3Int(x, y, 0)))
-                        {
-                            //if tile already existed, clear it
-                            MapManager.instance.ObstacleMap.SetTile(new Vector3Int(x, y, 0), null);
-                        }
-                        //set floors
-                        MapManager.instance.FloorMap.SetTile(new Vector3Int(x, y, 0), MapManager.instance.FloorTile);
+                        SetFloorTile(new Vector3Int(x, y));
                     }
                 }
             }
 
-            if (MapManager.instance.Rooms.Count == 0)
+            if (rooms.Count == 0)
             {
                 //The first room, where the player starts.
                 MapManager.instance.CreatePlayer(newRoom.Center());
@@ -58,7 +51,7 @@ sealed class ProcGen : MonoBehaviour
             else
             {
                 //Dig out a tunnel between this room and the previous one.
-                TunnelBetween(MapManager.instance.Rooms[MapManager.instance.Rooms.Count - 1], newRoom);
+                TunnelBetween(rooms[rooms.Count - 1], newRoom);
             }
 
             rooms.Add(newRoom);
@@ -83,19 +76,14 @@ sealed class ProcGen : MonoBehaviour
 
         //Generate the coordinates for this tunnel.
         List<Vector2Int> tunnelCoords = new List<Vector2Int>();
-        BresenhamLine(oldRoomCenter, tunnerCorner, tunnelCoords); //draw the first pixel line
-        BresenhamLine(tunnerCorner, newRoomCenter, tunnelCoords); //draw the second pixel line
+        BresenhamLine.Compute(oldRoomCenter, tunnerCorner, tunnelCoords); //draw the first pixel line of L
+        BresenhamLine.Compute(tunnerCorner, newRoomCenter, tunnelCoords); //draw the second pixel line of L
 
         //Set the tiles for this tunnel.
         for (int i = 0; i < tunnelCoords.Count; i++)
         {
-            if (MapManager.instance.ObstacleMap.HasTile(new Vector3Int(tunnelCoords[i].x, tunnelCoords[i].y, 0)))
-            {
-                MapManager.instance.ObstacleMap.SetTile(new Vector3Int(tunnelCoords[i].x, tunnelCoords[i].y, 0), null);
-            }
-
-            //Set the floor tile.
-            MapManager.instance.FloorMap.SetTile(new Vector3Int(tunnelCoords[i].x, tunnelCoords[i].y, 0), MapManager.instance.FloorTile);
+            //Set the floor tile inside the tunnel
+            SetFloorTile(new Vector3Int(tunnelCoords[i].x, tunnelCoords[i].y));
 
             //Set the wall tiles around this tile to be walls.
             for (int x = tunnelCoords[i].x - 1; x <= tunnelCoords[i].x + 1; x++)
@@ -113,7 +101,7 @@ sealed class ProcGen : MonoBehaviour
 
     private bool SetWallTileIfEmpty(Vector3Int pos)
     {
-        if (MapManager.instance.FloorMap.GetTile(new Vector3Int(pos.x, pos.y, 0)))
+        if (MapManager.instance.FloorMap.GetTile(pos))
         {
             //if the tile already existed
             return true;
@@ -121,36 +109,20 @@ sealed class ProcGen : MonoBehaviour
         else
         {
             //if empty, set a wall tile
-            MapManager.instance.ObstacleMap.SetTile(new Vector3Int(pos.x, pos.y, 0), MapManager.instance.WallTile);
+            MapManager.instance.ObstacleMap.SetTile(pos, MapManager.instance.WallTile);
             return false;
         }
     }
 
-    private void BresenhamLine(Vector2Int roomCenter, Vector2Int tunnelCorner, List<Vector2Int> tunnelCoords)
+    private void SetFloorTile(Vector3Int pos)
     {
-        //pixelly connect two points
-        int x = roomCenter.x, y = roomCenter.y;
-        int dx = Mathf.Abs(tunnelCorner.x - roomCenter.x), dy = Mathf.Abs(tunnelCorner.y - roomCenter.y);
-        int sx = roomCenter.x < tunnelCorner.x ? 1 : -1, sy = roomCenter.y < tunnelCorner.y ? 1 : -1;
-        int err = dx - dy;
-        while (true)
+        //if not the boundary of the room, set floors
+        if (MapManager.instance.ObstacleMap.GetTile(pos))
         {
-            tunnelCoords.Add(new Vector2Int(x, y));
-            if (x == tunnelCorner.x && y == tunnelCorner.y)
-            {
-                break;
-            }
-            int e2 = 2 * err;
-            if (e2 > -dy)
-            {
-                err -= dy;
-                x += sx;
-            }
-            if (e2 < dx)
-            {
-                err += dx;
-                y += sy;
-            }
+            //if tile already existed, clear it
+            MapManager.instance.ObstacleMap.SetTile(pos, null);
         }
+        //set floors
+        MapManager.instance.FloorMap.SetTile(pos, MapManager.instance.FloorTile);
     }
 }

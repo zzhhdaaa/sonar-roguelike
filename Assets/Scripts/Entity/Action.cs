@@ -11,6 +11,7 @@ static public class Action
     static public void MovementAction(Entity entity, Vector2 direction)
     {
         entity.Move(direction);
+        entity.UpdateFieldOfView();
         GameManager.instance.EndTurn();
     }
 

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Entity> entities = new List<Entity>();
 
     public bool IsPlayerTurn { get { return isPlayerTurn; } }
+    public List<Entity> Entities { get { return entities; } }
 
     private void Awake()
     {
