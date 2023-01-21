@@ -1,0 +1,8 @@
+Sprite sheet list w/description
+
+A: Player Rotation (8 frames); Slime Enemy Idle (5 frames) and hit (1 frame)
+B: Player Idle (7 frames); Eye Monster Idle (4 frames) and hit (1 frame)
+C: Player Run Down (6 frames)
+D: Player Run Side (6 frames); Icon tiles and tile highlight
+E: Player Run Up (6 frames)
+F: Player Jump (1 frame); Player Hit (2 frame); Player Collapse (1 frame) Player Attack side, up & down (2 frames); Sword Swing (3 frames-rotate or flip as needed)
