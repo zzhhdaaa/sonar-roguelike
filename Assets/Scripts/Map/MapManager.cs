@@ -4,6 +4,11 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
+    /// <summary>
+    /// The MapManager handles all tilemaps and tiles in the game. 
+    /// It continuously update the "explored" and "now visible" area. 
+    /// And thus handles whether a tile isExplored or isVisible, or an entity isVisible. 
+    /// </summary>
     public static MapManager instance;
 
     [Header("Map Settings")]

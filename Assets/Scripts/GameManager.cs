@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    /// <summary>
+    /// The GameManager manages all turns and entities in the game. 
+    /// It check each entity's status and allow them to play term-by-term
+    /// </summary>
     public static GameManager instance;
 
     [SerializeField] private float time = 0.1f;

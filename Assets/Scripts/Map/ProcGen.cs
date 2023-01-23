@@ -29,15 +29,15 @@ sealed class ProcGen : MonoBehaviour
                 {
                     if (x == roomX || x == roomX + roomWidth - 1 || y == roomY || y == roomY + roomHeight - 1)
                     {
-                        //if is the boundary of the room, set walls
+                        //if is the boundary of the room, then set walls if the tile is empty
                         if (SetWallTileIfEmpty(new Vector3Int(x, y, 0)))
                         {
-                            //if tile already existed, skip
                             continue;
                         }
                     }
                     else
                     {
+                        //not boundary, then set floor tile
                         SetFloorTile(new Vector3Int(x, y));
                     }
                 }

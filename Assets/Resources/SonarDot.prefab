@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2320909231651243053}
   - component: {fileID: 5522152610362060611}
+  - component: {fileID: -2960220429469404061}
   m_Layer: 0
   m_Name: SonarDot
   m_TagString: Untagged
@@ -84,3 +85,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-2960220429469404061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304188859995717877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519e7e450e2c89147b66d761a9fc0eb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
