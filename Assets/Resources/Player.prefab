@@ -112,5 +112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSentient: 1
+  blocksMovement: 1
   fieldOfViewRange: 8
   fieldOfView: []

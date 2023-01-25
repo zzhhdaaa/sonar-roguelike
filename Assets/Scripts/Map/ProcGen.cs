@@ -4,7 +4,7 @@ using UnityEngine;
 
 sealed class ProcGen : MonoBehaviour
 {
-    public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, List<RectangularRoom> rooms)
+    public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, int maxMonstersPerRoom, List<RectangularRoom> rooms)
     {
         for (int roomNum = 0; roomNum < maxRooms; roomNum++)
         {
@@ -43,19 +43,21 @@ sealed class ProcGen : MonoBehaviour
                 }
             }
 
-            if (rooms.Count == 0)
-            {
-                //The first room, where the player starts.
-                MapManager.instance.CreatePlayer(newRoom.Center());
-            }
-            else
+            if (rooms.Count != 0)
             {
                 //Dig out a tunnel between this room and the previous one.
                 TunnelBetween(rooms[rooms.Count - 1], newRoom);
             }
+            else
+            {
+            }
+
+            PlaceEntities(newRoom, maxMonstersPerRoom);
 
             rooms.Add(newRoom);
         }
+        //The first room, where the player starts.
+        MapManager.instance.CreateEntity("Player", rooms[0].Center());
     }
 
     private void TunnelBetween(RectangularRoom oldRoom, RectangularRoom newRoom)
@@ -124,5 +126,41 @@ sealed class ProcGen : MonoBehaviour
         }
         //set floors
         MapManager.instance.FloorMap.SetTile(pos, MapManager.instance.FloorTile);
+    }
+
+    private void PlaceEntities(RectangularRoom newRoom, int maximumMonsters)
+    {
+        int numberOfMonsters = Random.Range(0, maximumMonsters + 1);
+
+        for (int monster = 0; monster < numberOfMonsters;)
+        {
+            int x = Random.Range(newRoom.x, newRoom.x + newRoom.width);
+            int y = Random.Range(newRoom.y, newRoom.y + newRoom.height);
+
+            if (x == newRoom.x || x == newRoom.x + newRoom.width - 1 || y == newRoom.y || y == newRoom.y + newRoom.height - 1)
+            {
+                continue;
+            }
+
+            for (int entity = 0; entity < GameManager.instance.Entities.Count; entity++)
+            {
+                Vector3Int pos = MapManager.instance.FloorMap.WorldToCell(GameManager.instance.Entities[entity].transform.position);
+
+                if (pos.x == x && pos.y == y)
+                {
+                    return;
+                }
+            }
+
+            if (Random.value < 0.8f)
+            {
+                MapManager.instance.CreateEntity("Orc", new Vector2(x, y));
+            }
+            else
+            {
+                MapManager.instance.CreateEntity("Troll", new Vector2(x, y));
+            }
+            monster++;
+        }
     }
 }

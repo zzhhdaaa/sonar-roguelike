@@ -272,6 +272,7 @@ MonoBehaviour:
   roomMaxSize: 24
   roomMinSize: 8
   maxRooms: 30
+  maxMonstersPerRoom: 2
   floorTile: {fileID: 11400000, guid: 6b27013c1f760f9498f1b22af18eb25b, type: 2}
   wallTile: {fileID: 11400000, guid: df06e1ce4e7f3ef4a92c53e41d2d7e5e, type: 2}
   fogTile: {fileID: 11400000, guid: 7136e607c9b6182419be4288c9954c41, type: 2}
@@ -630,7 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb2c41aefc3feb24cb5e75e0a11dac1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 0.1
+  time: 0.025
   isPlayerTurn: 1
   entityNum: 0
   entities: []

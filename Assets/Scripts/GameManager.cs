@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -66,5 +67,18 @@ public class GameManager : MonoBehaviour
     public void InsertEntity(Entity entity, int index)
     {
         entities.Insert(index, entity);
+    }
+
+    public Entity GetBlockingEntityAtLocation(Vector3 location)
+    {
+        foreach (Entity entity in entities)
+        {
+            if (entity.BlocksMovement && entity.transform.position == location)
+            {
+                return entity;
+            }
+        }
+
+        return null;
     }
 }

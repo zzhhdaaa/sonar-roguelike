@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] private bool isSentient = false;
+    [SerializeField] private bool isSentient = false, blocksMovement = false;
 
     [SerializeField] private int fieldOfViewRange = 8;
     [SerializeField] private List<Vector3Int> fieldOfView;
 
     private AdamMilVisibility adamMilVisibility;
-
+    
     public bool IsSentient { get { return isSentient; } }
+    public bool BlocksMovement { get { return blocksMovement; } }
 
     private void Start()
     {

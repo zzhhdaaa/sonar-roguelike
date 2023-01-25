@@ -52,8 +52,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
         if (IsValidPosition(futurePosition))
         {
-            Action.MovementAction(GetComponent<Entity>(), roundedDirection); //move player
-            SonarManager.instance.SonarDetect(futurePosition); //detect sonar
+            moveKeyHeld = Action.BumpAction(GetComponent<Entity>(), roundedDirection); //move player
+
+            if (moveKeyHeld)
+                SonarManager.instance.SonarDetect(futurePosition); //detect sonar
         }
     }
 
