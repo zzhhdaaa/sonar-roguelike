@@ -3,51 +3,17 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] private bool isSentient = false, blocksMovement = false;
+    [SerializeField] private bool blocksMovement;
 
-    [SerializeField] private int fieldOfViewRange = 8;
-    [SerializeField] private List<Vector3Int> fieldOfView;
+    public bool BlocksMovement { get { return blocksMovement; } set { blocksMovement = value; } }
 
-    private AdamMilVisibility adamMilVisibility;
-    
-    public bool IsSentient { get { return isSentient; } }
-    public bool BlocksMovement { get { return blocksMovement; } }
-
-    private void Start()
+    public void AddToGameManager()
     {
-        if (IsSentient)
-        {
-            if (GetComponent<Player>())
-            {
-                GameManager.instance.InsertEntity(this, 0);
-            }
-            else
-            {
-                GameManager.instance.AddEntity(this);
-            }
-        }
-
-        fieldOfView = new List<Vector3Int>();
-        adamMilVisibility = new AdamMilVisibility();
-        UpdateFieldOfView();
+        GameManager.instance.Entities.Add(this);
     }
 
     public void Move(Vector2 direction)
     {
         transform.position += (Vector3)direction;
-    }
-
-    public void UpdateFieldOfView()
-    {
-        Vector3Int gridPosition = MapManager.instance.FloorMap.WorldToCell(transform.position);
-
-        fieldOfView.Clear();
-        adamMilVisibility.Compute(gridPosition, fieldOfViewRange, fieldOfView);
-
-        if (GetComponent<Player>())
-        {
-            MapManager.instance.UpdateFogMap(fieldOfView);
-            MapManager.instance.SetEntitiesVisibilities();
-        }
     }
 }

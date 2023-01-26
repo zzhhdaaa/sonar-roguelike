@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-sealed class ProcGen : MonoBehaviour
+sealed class ProcGen
 {
+    /// <summary>
+    /// The Procedural Generator generates each level of the game.
+    /// Including placing rooms, creating tunnels, placing player and monsters.
+    /// </summary>
     public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, int maxMonstersPerRoom, List<RectangularRoom> rooms)
     {
         for (int roomNum = 0; roomNum < maxRooms; roomNum++)
@@ -45,19 +49,19 @@ sealed class ProcGen : MonoBehaviour
 
             if (rooms.Count != 0)
             {
-                //Dig out a tunnel between this room and the previous one.
+                //Dig out a tunnel between this room and the previous one. And place monsters.
                 TunnelBetween(rooms[rooms.Count - 1], newRoom);
+                PlaceActors(newRoom, maxMonstersPerRoom);
             }
             else
             {
+                //The first room, where the player starts.
+                MapManager.instance.CreateEntity("Player", newRoom.Center());
+                //SonarManager.instance.SonarDetect((Vector3Int)newRoom.Center());
             }
-
-            PlaceEntities(newRoom, maxMonstersPerRoom);
 
             rooms.Add(newRoom);
         }
-        //The first room, where the player starts.
-        MapManager.instance.CreateEntity("Player", rooms[0].Center());
     }
 
     private void TunnelBetween(RectangularRoom oldRoom, RectangularRoom newRoom)
@@ -118,35 +122,37 @@ sealed class ProcGen : MonoBehaviour
 
     private void SetFloorTile(Vector3Int pos)
     {
-        //if not the boundary of the room, set floors
         if (MapManager.instance.ObstacleMap.GetTile(pos))
         {
-            //if tile already existed, clear it
+            //if obstacle tile already existed, clear it
             MapManager.instance.ObstacleMap.SetTile(pos, null);
         }
-        //set floors
+
         MapManager.instance.FloorMap.SetTile(pos, MapManager.instance.FloorTile);
     }
 
-    private void PlaceEntities(RectangularRoom newRoom, int maximumMonsters)
+    private void PlaceActors(RectangularRoom newRoom, int maximumMonsters)
     {
         int numberOfMonsters = Random.Range(0, maximumMonsters + 1);
 
-        for (int monster = 0; monster < numberOfMonsters;)
+        for (int monster = 0; monster < numberOfMonsters; monster++)
         {
-            int x = Random.Range(newRoom.x, newRoom.x + newRoom.width);
-            int y = Random.Range(newRoom.y, newRoom.y + newRoom.height);
+            //random x & y for new monster
+            int monsterX = Random.Range(newRoom.X + 1, newRoom.X + newRoom.Width - 1);
+            int monsterY = Random.Range(newRoom.Y + 1, newRoom.Y + newRoom.Height - 1);
 
-            if (x == newRoom.x || x == newRoom.x + newRoom.width - 1 || y == newRoom.y || y == newRoom.y + newRoom.height - 1)
-            {
-                continue;
-            }
+            //if (x == newRoom.x || x == newRoom.x + newRoom.width - 1 || y == newRoom.y || y == newRoom.y + newRoom.height - 1)
+            //{
+            //    //don't generate in the boundary
+            //    continue;
+            //}
 
             for (int entity = 0; entity < GameManager.instance.Entities.Count; entity++)
             {
+                //don't overlap any existing entity
                 Vector3Int pos = MapManager.instance.FloorMap.WorldToCell(GameManager.instance.Entities[entity].transform.position);
 
-                if (pos.x == x && pos.y == y)
+                if (pos.x == monsterX && pos.y == monsterY)
                 {
                     return;
                 }
@@ -154,13 +160,12 @@ sealed class ProcGen : MonoBehaviour
 
             if (Random.value < 0.8f)
             {
-                MapManager.instance.CreateEntity("Orc", new Vector2(x, y));
+                MapManager.instance.CreateEntity("Orc", new Vector2(monsterX, monsterY));
             }
             else
             {
-                MapManager.instance.CreateEntity("Troll", new Vector2(x, y));
+                MapManager.instance.CreateEntity("Troll", new Vector2(monsterX, monsterY));
             }
-            monster++;
         }
     }
 }

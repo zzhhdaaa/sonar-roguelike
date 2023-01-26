@@ -8,47 +8,63 @@ static public class Action
         Debug.Log("Quit");
     }
 
-    static public bool BumpAction(Entity entity, Vector2 direction)
+    static public bool BumpAction(Actor actor, Vector2 direction)
     {
-        //check if another entity is on the destination
-        Entity target = GameManager.instance.GetBlockingEntityAtLocation(entity.transform.position + (Vector3)direction);
+        //check if another actor is on the destination
+        Actor target = GameManager.instance.GetBlockingActorAtLocation(actor.transform.position + (Vector3)direction);
 
         if (target)
         {
-            MeleeAction(target);
+            MeleeAction(actor, target);
             return false;
         }
         else
         {
-            MovementAction(entity, direction);
+            MovementAction(actor, direction);
             return true;
         }
     }
 
-    static public void MeleeAction(Entity target)
+    static public void MeleeAction(Actor actor, Actor target)
     {
-        Debug.Log($"You kick the {target.name}, much to its annoyance!");
-        GameManager.instance.EndTurn();
-    }
+        int damage = actor.GetComponent<Fighter>().Power - target.GetComponent<Fighter>().Defense;
 
-    static public void MovementAction(Entity entity, Vector2 direction)
-    {
-        entity.Move(direction);
-        entity.UpdateFieldOfView();
-        GameManager.instance.EndTurn();
-    }
+        string attackDesc = $"{actor.name} attacks {target.name}";
 
-    static public void SkipAction(Entity entity)
-    {
-        if (entity.GetComponent<Player>())
+        string colorHex = "";
+
+        if (actor.GetComponent<Player>())
         {
-            Debug.Log("You decided to skip your turn.");
+            colorHex = "#ffffff";
         }
         else
         {
-            Debug.Log($"The {entity.name} wonders when it will get to take a real turn.");
+            colorHex = "#d1a3a4";
         }
 
+        if (damage > 0)
+        {
+            //Debug.Log($"{attackDesc} for {damage} hit points.");
+            UIManager.instance.AddMessage($"{attackDesc} for {damage} hit points.", colorHex);
+            target.GetComponent<Fighter>().Hp -= damage;
+        }
+        else
+        {
+            //Debug.Log($"{attackDesc} but nothing happened.");
+            UIManager.instance.AddMessage($"{attackDesc} but nothing happened.", colorHex);
+        }
+        GameManager.instance.EndTurn();
+    }
+
+    static public void MovementAction(Actor actor, Vector2 direction)
+    {
+        actor.Move(direction);
+        actor.UpdateFieldOfView();
+        GameManager.instance.EndTurn();
+    }
+
+    static public void SkipAction()
+    {
         GameManager.instance.EndTurn();
     }
 }
