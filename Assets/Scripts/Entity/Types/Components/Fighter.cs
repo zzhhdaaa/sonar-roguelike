@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MoreMountains.Feedbacks;
 
 [RequireComponent(typeof(Actor))]
 sealed class Fighter : MonoBehaviour
 {
     [SerializeField] private int maxHp, hp, defense, power;
     [SerializeField] private Actor target;
+    [SerializeField] private MMFeedbacks meleeFeedbacks;
+
+    public MMFeedbacks MeleeFeedbacks { get { return meleeFeedbacks; } }
 
     public int Hp
     {

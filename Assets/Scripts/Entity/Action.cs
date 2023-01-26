@@ -23,6 +23,8 @@ static public class Action
 
             UIManager.instance.AddMessage($"You found a {item.name}!", "#FFFFFF");
 
+            actor.PickupFeedbacks?.PlayFeedbacks();
+
             GameManager.instance.RemoveEntity(item);
             GameManager.instance.EndTurn();
         }
@@ -45,6 +47,7 @@ static public class Action
         if (item.GetComponent<Consumable>())
         {
             itemUsed = item.GetComponent<Consumable>().Activate(actor, item);
+            actor.PickupFeedbacks?.PlayFeedbacks();
         }
 
         if (!itemUsed)
@@ -101,6 +104,9 @@ static public class Action
             //Debug.Log($"{attackDesc} but nothing happened.");
             UIManager.instance.AddMessage($"{attackDesc} but nothing happened.", colorHex);
         }
+
+        actor.GetComponent<Fighter>().MeleeFeedbacks?.PlayFeedbacks();
+
         GameManager.instance.EndTurn();
     }
 
@@ -108,6 +114,7 @@ static public class Action
     {
         actor.Move(direction);
         actor.UpdateFieldOfView();
+        actor.MoveFeedbacks?.PlayFeedbacks();
         GameManager.instance.EndTurn();
     }
 

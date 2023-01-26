@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using MoreMountains.Feedbacks;
 
 public class Actor : Entity
 {
@@ -8,12 +9,16 @@ public class Actor : Entity
     [SerializeField] private List<Vector3Int> fieldOfView = new List<Vector3Int>();
     [SerializeField] private AI aI;
     [SerializeField] private Inventory inventory;
+    [SerializeField] private MMFeedbacks moveFeedbacks;
+    [SerializeField] private MMFeedbacks pickupFeedbacks;
 
     private AdamMilVisibility adamMilVisibility;
     
     public bool IsAlive { get { return isAlive; } set { isAlive = value; } }
     public List<Vector3Int> FieldOfView { get { return fieldOfView; } }
     public Inventory Inventory { get { return inventory; } }
+    public MMFeedbacks MoveFeedbacks { get { return moveFeedbacks; } }
+    public MMFeedbacks PickupFeedbacks { get { return pickupFeedbacks; } }
 
     private void OnValidate()
     {

@@ -15,10 +15,26 @@ sealed class ProcGen
             int roomWidth = Random.Range(roomMinSize, roomMaxSize);
             int roomHeight = Random.Range(roomMinSize, roomMaxSize);
 
+            if (roomNum == 0)
+            {
+                roomWidth = Random.Range(roomMinSize, roomMaxSize/2);
+                roomHeight = Random.Range(roomMinSize, roomMaxSize/2);
+            }
+
             int roomX = Random.Range(0, mapWidth - roomWidth - 1);
             int roomY = Random.Range(0, mapHeight - roomHeight - 1);
 
             RectangularRoom newRoom = new RectangularRoom(roomX, roomY, roomWidth, roomHeight);
+
+            if (rooms.Count != 0)
+            {
+                float distance = Vector2.Distance(new Vector2(roomX, roomY), new Vector2(rooms[rooms.Count - 1].X, rooms[rooms.Count - 1].Y));
+                float disTolerance = Mathf.Max((roomWidth + rooms[rooms.Count - 1].Width), (roomHeight + rooms[rooms.Count - 1].Height));
+                if (distance > disTolerance * 1.4f || distance < disTolerance * 1.1f)
+                {
+                    continue;
+                }
+            }
 
             if (newRoom.Overlaps(rooms))
             {
@@ -51,6 +67,10 @@ sealed class ProcGen
             {
                 //Dig out a tunnel between this room and the previous one. And place monsters.
                 TunnelBetween(rooms[rooms.Count - 1], newRoom);
+                //if (Random.value > 0.75f && rooms.Count > 2)
+                //{
+                //    TunnelBetween(rooms[Random.Range(0, rooms.Count - 1)], newRoom);
+                //}
                 PlaceEntities(newRoom, maxMonstersPerRoom, maxItemsPerRoom);
             }
             else
@@ -70,15 +90,7 @@ sealed class ProcGen
         Vector2Int newRoomCenter = newRoom.Center();
         Vector2Int tunnerCorner;
 
-        //decide the corner for the L shape tunnel
-        if (Random.value < 0.5f)
-        {
-            tunnerCorner = new Vector2Int(newRoomCenter.x, oldRoomCenter.y); //newx oldy
-        }
-        else
-        {
-            tunnerCorner= new Vector2Int(oldRoomCenter.x, newRoomCenter.y); //oldx newy
-        }
+        tunnerCorner = new Vector2Int(newRoomCenter.x, oldRoomCenter.y); //newx oldy
 
         //Generate the coordinates for this tunnel.
         List<Vector2Int> tunnelCoords = new List<Vector2Int>();
