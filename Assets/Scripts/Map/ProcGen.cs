@@ -8,7 +8,7 @@ sealed class ProcGen
     /// The Procedural Generator generates each level of the game.
     /// Including placing rooms, creating tunnels, placing player and monsters.
     /// </summary>
-    public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, int maxMonstersPerRoom, List<RectangularRoom> rooms)
+    public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, int maxMonstersPerRoom, int maxItemsPerRoom, List<RectangularRoom> rooms)
     {
         for (int roomNum = 0; roomNum < maxRooms; roomNum++)
         {
@@ -51,7 +51,7 @@ sealed class ProcGen
             {
                 //Dig out a tunnel between this room and the previous one. And place monsters.
                 TunnelBetween(rooms[rooms.Count - 1], newRoom);
-                PlaceActors(newRoom, maxMonstersPerRoom);
+                PlaceEntities(newRoom, maxMonstersPerRoom, maxItemsPerRoom);
             }
             else
             {
@@ -131,21 +131,16 @@ sealed class ProcGen
         MapManager.instance.FloorMap.SetTile(pos, MapManager.instance.FloorTile);
     }
 
-    private void PlaceActors(RectangularRoom newRoom, int maximumMonsters)
+    private void PlaceEntities(RectangularRoom newRoom, int maximumMonsters, int maximumItems)
     {
         int numberOfMonsters = Random.Range(0, maximumMonsters + 1);
+        int numberOfItems = Random.Range(0, maximumItems + 1);
 
         for (int monster = 0; monster < numberOfMonsters; monster++)
         {
             //random x & y for new monster
             int monsterX = Random.Range(newRoom.X + 1, newRoom.X + newRoom.Width - 1);
             int monsterY = Random.Range(newRoom.Y + 1, newRoom.Y + newRoom.Height - 1);
-
-            //if (x == newRoom.x || x == newRoom.x + newRoom.width - 1 || y == newRoom.y || y == newRoom.y + newRoom.height - 1)
-            //{
-            //    //don't generate in the boundary
-            //    continue;
-            //}
 
             for (int entity = 0; entity < GameManager.instance.Entities.Count; entity++)
             {
@@ -166,6 +161,26 @@ sealed class ProcGen
             {
                 MapManager.instance.CreateEntity("Troll", new Vector2(monsterX, monsterY));
             }
+        }
+
+        for (int item = 0; item < numberOfItems; item++)
+        {
+            //random x & y for new item
+            int itemX = Random.Range(newRoom.X + 1, newRoom.X + newRoom.Width - 1);
+            int itemY = Random.Range(newRoom.Y + 1, newRoom.Y + newRoom.Height - 1);
+
+            for (int entity = 0; entity < GameManager.instance.Entities.Count; entity++)
+            {
+                //don't overlap any existing entity
+                Vector3Int pos = MapManager.instance.FloorMap.WorldToCell(GameManager.instance.Entities[entity].transform.position);
+
+                if (pos.x == itemX && pos.y == itemY)
+                {
+                    return;
+                }
+            }
+
+            MapManager.instance.CreateEntity("Potion of Health", new Vector2(itemX, itemY));
         }
     }
 }

@@ -24,9 +24,36 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "View",
+                    "name": "History",
                     "type": "Button",
                     "id": "06702e7f-e267-4af5-a38e-0fc721977079",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Inventory",
+                    "type": "Button",
+                    "id": "53f2a9f9-9320-47a1-851d-29b924e1391b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pickup",
+                    "type": "Button",
+                    "id": "2c2447e0-0672-439b-a4c0-8fc2e60d38b7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Drop",
+                    "type": "Button",
+                    "id": "48992e42-b115-4e27-baec-55f59ea2cb60",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -48,7 +75,7 @@
                 {
                     "name": "up",
                     "id": "446d1c8e-e49e-438f-882a-ea1830e77cc7",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "Arrow Keys",
@@ -59,7 +86,7 @@
                 {
                     "name": "down",
                     "id": "1740f0a9-581c-486e-8e1f-8dd970567fd9",
-                    "path": "<Keyboard>/downArrow",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "Arrow Keys",
@@ -70,7 +97,7 @@
                 {
                     "name": "left",
                     "id": "5558731b-81f4-498d-8a5a-40a014054100",
-                    "path": "<Keyboard>/leftArrow",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "Arrow Keys",
@@ -81,7 +108,7 @@
                 {
                     "name": "right",
                     "id": "117a2750-00f7-4a52-8bc4-f16fdaffe389",
-                    "path": "<Keyboard>/rightArrow",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "Arrow Keys",
@@ -103,11 +130,44 @@
                 {
                     "name": "",
                     "id": "983d1599-5318-4553-9a21-da024d60be6e",
-                    "path": "<Keyboard>/v",
+                    "path": "<Keyboard>/h",
                     "interactions": "",
                     "processors": "",
                     "groups": "Arrow Keys",
-                    "action": "View",
+                    "action": "History",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a83e7033-d55d-46df-8664-e641207a467e",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Arrow Keys",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9dbc90c8-1272-4913-886a-f5c931db1710",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Arrow Keys",
+                    "action": "Pickup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e03f64f5-1fe6-468c-ac3b-5f1c44d1f826",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Arrow Keys",
+                    "action": "Drop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -63,4 +63,23 @@ sealed class Fighter : MonoBehaviour
             GameManager.instance.RemoveActor(this.GetComponent<Actor>());
         }
     }
+
+    public int Heal(int amount)
+    {
+        if (hp == maxHp)
+        {
+            return 0;
+        }
+
+        int newHpValue = hp + amount;
+
+        if (newHpValue > maxHp)
+        {
+            newHpValue = maxHp;
+        }
+
+        int amountRecovered = newHpValue - hp;
+        Hp = newHpValue;
+        return amountRecovered;
+    }
 }

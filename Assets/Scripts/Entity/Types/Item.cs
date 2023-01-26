@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item : Entity
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Consumable consumable;
+    public Consumable Consumable { get { return consumable; } }
+
+    private void OnValidate()
     {
-        
+        if (GetComponent<Consumable>())
+        {
+            consumable = GetComponent<Consumable>();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        AddToGameManager();
     }
 }

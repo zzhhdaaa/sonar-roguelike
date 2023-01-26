@@ -2,10 +2,58 @@
 
 static public class Action
 {
-    static public void EscapeAction()
+    static public void PickupAction(Actor actor)
     {
-        //Application.Quit();
-        Debug.Log("Quit");
+        for (int i = 0; i < GameManager.instance.Entities.Count; i++)
+        {
+            if (GameManager.instance.Entities[i].GetComponent<Actor>() || actor.transform.position != GameManager.instance.Entities[i].transform.position)
+            {
+                continue;
+            }
+
+            if (actor.Inventory.Items.Count >= actor.Inventory.Capacity)
+            {
+                UIManager.instance.AddMessage($"Don't be so greedy.", "#FF0000");
+                return;
+            }
+
+            Item item = GameManager.instance.Entities[i].GetComponent<Item>();
+            item.transform.SetParent(actor.transform);
+            actor.Inventory.Items.Add(item);
+
+            UIManager.instance.AddMessage($"You found a {item.name}!", "#FFFFFF");
+
+            GameManager.instance.RemoveEntity(item);
+            GameManager.instance.EndTurn();
+        }
+    }
+
+    static public void DropAction(Actor actor, Item item)
+    {
+        actor.Inventory.Drop(item);
+
+        UIManager.instance.ToggleDropMenu();
+        GameManager.instance.EndTurn();
+    }
+
+    static public void UseAction(Actor actor, int index)
+    {
+        Item item = actor.Inventory.Items[index];
+
+        bool itemUsed = false;
+
+        if (item.GetComponent<Consumable>())
+        {
+            itemUsed = item.GetComponent<Consumable>().Activate(actor, item);
+        }
+
+        if (!itemUsed)
+        {
+            return;
+        }
+
+        UIManager.instance.ToggleInventory();
+        GameManager.instance.EndTurn();
     }
 
     static public bool BumpAction(Actor actor, Vector2 direction)
