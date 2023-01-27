@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4853360477544753791}
   - component: {fileID: 6631332969930650885}
   - component: {fileID: 4291216478112619002}
-  - component: {fileID: 3204671718181720476}
+  - component: {fileID: 2175033793626597284}
   m_Layer: 0
-  m_Name: Potion of Health
+  m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4090289b14081c74d9929da1e8cd9bb9, type: 3}
-  m_Color: {r: 0.41960788, g: 1, b: 0.6939614, a: 1}
+  m_Color: {r: 1, g: 0.6339274, b: 0.41960788, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocksMovement: 0
-  consumable: {fileID: 3204671718181720476}
---- !u!114 &3204671718181720476
+  consumable: {fileID: 2175033793626597284}
+--- !u!114 &2175033793626597284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,7 +109,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4379705989940313608}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb0afd169fcf15f4b8c576fbdc827d7c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e303c9950399424fa99d069d038d9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 4
+  damage: 12
+  radius: 5

@@ -9889,11 +9889,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blocksMovement: 1
   isAlive: 1
-  fieldOfViewRange: 15
+  fieldOfViewRange: 20
   fieldOfView: []
   aI: {fileID: 381899846177888624}
   inventory: {fileID: 0}
   moveFeedbacks: {fileID: 8700692993408653736}
+  pickupFeedbacks: {fileID: 0}
 --- !u!114 &-5678569716768591593
 MonoBehaviour:
   m_ObjectHideFlags: 0

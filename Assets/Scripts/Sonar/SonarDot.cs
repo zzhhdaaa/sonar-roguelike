@@ -16,12 +16,12 @@ public class SonarDot : MonoBehaviour
 
     private void UpdateDotColor()
     {
-        if (alpha > 0.2f)
+        if (alpha > 0.1f)
         {
-            alpha -= 0.1f;
+            alpha /= 1.05f;
             spriteRenderer.color = new Color(1, 1, 1, alpha);
         }
-        if (alpha <= 0.2f)
+        else
         {
             SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
         }

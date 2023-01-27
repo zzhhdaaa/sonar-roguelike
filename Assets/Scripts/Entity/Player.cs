@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +10,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     /// Here is the only Update method in the game.
     /// </summary>
     private Controls controls;
-
-    [SerializeField] private bool moveKeyHeld;
+    [SerializeField] private bool moveKeyDown;
+    [SerializeField] private bool targetMode;
+    [SerializeField] private bool isSingleTarget;
+    [SerializeField] private GameObject targetObject;
 
     private void Awake()
     {
@@ -35,16 +39,37 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     void Controls.IPlayerActions.OnMovement(InputAction.CallbackContext context)
     {
-        if (context.started)
-            moveKeyHeld = true;
+        if (context.started && GetComponent<Actor>().IsAlive)
+        {
+            if (targetMode && !moveKeyDown)
+            {
+                moveKeyDown = true;
+                Move();
+            }
+            else if (!targetMode)
+            {
+                moveKeyDown = true;
+            }
+        }
         else if (context.canceled)
-            moveKeyHeld = false;
+        {
+            moveKeyDown = false;
+        }
     }
 
     void Controls.IPlayerActions.OnExit(InputAction.CallbackContext context)
     {
         if (context.performed)
-            UIManager.instance.ToggleMenu();
+        {
+            if (UIManager.instance.IsMenuOpen)
+            {
+                UIManager.instance.ToggleMenu();
+            }
+            else if (targetMode)
+            {
+                ToggleTargetMode();
+            }
+        }
     }
 
     public void OnHistory(InputAction.CallbackContext context)
@@ -62,7 +87,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed)
         {
-            Action.PickupAction(GetComponent<Actor>());
+            if (CanAct())
+            {
+                Action.PickupAction(GetComponent<Actor>());
+            }
         }
     }
 
@@ -70,7 +98,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed)
         {
-            if (!UIManager.instance.IsMenuOpen || UIManager.instance.IsInventoryOpen)
+            if (CanAct() || UIManager.instance.IsInventoryOpen)
             {
                 if (GetComponent<Inventory>().Items.Count > 0)
                 {
@@ -88,7 +116,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed)
         {
-            if (!UIManager.instance.IsMenuOpen || UIManager.instance.IsDropMenuOpen)
+            if (CanAct() || UIManager.instance.IsDropMenuOpen)
             {
                 if (GetComponent<Inventory>().Items.Count > 0)
                 {
@@ -102,37 +130,167 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
     }
 
-    private void FixedUpdate()
+    public void OnConfirm(InputAction.CallbackContext context)
     {
-        if (!UIManager.instance.IsMenuOpen)
+        if (context.performed)
         {
-            if (GameManager.instance.IsPlayerTurn && moveKeyHeld && GetComponent<Actor>().IsAlive)
-                MovePlayer();
+            if (targetMode)
+            {
+                if (isSingleTarget)
+                {
+                    Actor target = SingleTargetChecks(targetObject.transform.position);
+
+                    if (target != null)
+                    {
+                        Action.CastAction(GetComponent<Actor>(), target, GetComponent<Inventory>().SelectedConsumable);
+                    }
+                }
+                else
+                {
+                    List<Actor> targets = AreaTargetChecks(targetObject.transform.position);
+
+                    if (targets != null)
+                    {
+                        Action.CastAction(GetComponent<Actor>(), targets, GetComponent<Inventory>().SelectedConsumable);
+                    }
+                }
+            }
         }
     }
 
-    private void MovePlayer()
+    private void FixedUpdate()
+    {
+        if (!UIManager.instance.IsMenuOpen && !targetMode)
+        {
+            if (GameManager.instance.IsPlayerTurn && moveKeyDown && GetComponent<Actor>().IsAlive)
+                Move();
+        }
+    }
+
+    private void Move()
     {
         Vector2 direction = controls.Player.Movement.ReadValue<Vector2>();
         Vector2 roundedDirection = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
-        Vector3 futurePosition = transform.position + (Vector3)roundedDirection;
+        Vector3 futurePosition;
 
-        if (IsValidPosition(futurePosition))
+        if (targetMode)
         {
-            moveKeyHeld = Action.BumpAction(GetComponent<Actor>(), roundedDirection); //move player
+            futurePosition = targetObject.transform.position + (Vector3)roundedDirection;
+        }
+        else
+        {
+            futurePosition = transform.position + (Vector3)roundedDirection;
+        }
 
-            if (moveKeyHeld)
-                SonarManager.instance.SonarDetect(futurePosition); //detect sonar
+        if (targetMode)
+        {
+            Vector3Int targetGridPosition = MapManager.instance.FloorMap.WorldToCell(futurePosition);
+
+            if (MapManager.instance.IsValidPosition(futurePosition) && GetComponent<Actor>().FieldOfView.Contains(targetGridPosition))
+            {
+                targetObject.transform.position = futurePosition;
+            }
+        }
+        else
+        {
+            moveKeyDown = Action.BumpAction(GetComponent<Actor>(), roundedDirection); //if bump into an entity, moveKeyDown is set to false
+
+            //detect sonar
+            if (moveKeyDown)
+                SonarManager.instance.SonarDetect(futurePosition);
+            else
+                SonarManager.instance.SonarDetect(transform.position);
         }
     }
 
-    private bool IsValidPosition(Vector3 futurePosition)
+    public void ToggleTargetMode(bool isArea = false, int radius = 1)
     {
-        Vector3Int gridPosition = MapManager.instance.FloorMap.WorldToCell(futurePosition);
+        targetMode = !targetMode;
 
-        if (!MapManager.instance.InBounds(gridPosition.x, gridPosition.y) || MapManager.instance.ObstacleMap.HasTile(gridPosition) || futurePosition == transform.position)
+        if (targetMode)
+        {
+            if (targetObject.transform.position != transform.position)
+            {
+                targetObject.transform.position = transform.position;
+            }
+
+            if (isArea)
+            {
+                isSingleTarget = false;
+                targetObject.transform.GetChild(0).localScale = Vector3.one * (radius + 1);
+                targetObject.transform.GetChild(0).gameObject.SetActive(true);
+            }
+            else
+            {
+                isSingleTarget = true;
+            }
+
+            targetObject.SetActive(true);
+        }
+        else
+        {
+            if (targetObject.transform.GetChild(0).gameObject.activeSelf)
+            {
+                targetObject.transform.GetChild(0).gameObject.SetActive(false);
+            }
+
+            targetObject.SetActive(false);
+            GetComponent<Inventory>().SelectedConsumable = null;
+        }
+    }
+
+    private bool CanAct()
+    {
+        if (targetMode || UIManager.instance.IsMenuOpen || !GetComponent<Actor>().IsAlive)
+        {
             return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 
-        return true;
+    private Actor SingleTargetChecks(Vector3 targetPosition)
+    {
+        Actor target = GameManager.instance.GetActorAtLocation(targetPosition);
+
+        if (target == null)
+        {
+            UIManager.instance.AddMessage("No target at location.", "#ffffff");
+            return null;
+        }
+
+        if (target == GetComponent<Actor>())
+        {
+            UIManager.instance.AddMessage("Stupid choice.", "#ffffff");
+            return null;
+        }
+
+        return target;
+    }
+
+    private List<Actor> AreaTargetChecks(Vector3 targetPosition)
+    {
+        int radius = (int)targetObject.transform.GetChild(0).localScale.x - 1;
+
+        Bounds targetBounds = new Bounds(targetPosition, Vector3.one * radius * 2);
+        List<Actor> targets = new List<Actor>();
+
+        foreach (Actor target in GameManager.instance.Actors)
+        {
+            if (targetBounds.Contains(target.transform.position))
+            {
+                targets.Add(target);
+            }
+        }
+
+        if (targets.Count == 0)
+        {
+            UIManager.instance.AddMessage("No targets in the area.", "#ffffff");
+            return null;
+        }
+
+        return targets;
     }
 }

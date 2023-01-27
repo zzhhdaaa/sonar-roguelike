@@ -17,6 +17,7 @@ public class Actor : Entity
     public bool IsAlive { get { return isAlive; } set { isAlive = value; } }
     public List<Vector3Int> FieldOfView { get { return fieldOfView; } }
     public Inventory Inventory { get { return inventory; } }
+    public AI AI { get { return aI; } set { aI = value; } }
     public MMFeedbacks MoveFeedbacks { get { return moveFeedbacks; } }
     public MMFeedbacks PickupFeedbacks { get { return pickupFeedbacks; } }
 

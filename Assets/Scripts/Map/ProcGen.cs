@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 sealed class ProcGen
@@ -192,7 +193,25 @@ sealed class ProcGen
                 }
             }
 
-            MapManager.instance.CreateEntity("Potion of Health", new Vector2(itemX, itemY));
+            float randomValue = Random.value;
+            Debug.Log(randomValue);
+            if (randomValue < 0.4f)
+            {
+                MapManager.instance.CreateEntity("Potion of Health", new Vector2(itemX, itemY));
+            }
+            else if (randomValue < 0.7f)
+            {
+                MapManager.instance.CreateEntity("Explosion", new Vector2(itemX, itemY));
+            }
+            else if (randomValue < 0.9f)
+            {
+                MapManager.instance.CreateEntity("Confusion", new Vector2(itemX, itemY));
+            }
+            else
+            {
+                MapManager.instance.CreateEntity("Lightning", new Vector2(itemX, itemY));
+            }
+            item++;
         }
     }
 }
