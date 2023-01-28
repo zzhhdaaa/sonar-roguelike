@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using Michsky.UI.Reach;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,10 +15,10 @@ public class UIManager : MonoBehaviour
 
     [Header("Health UI")]
     [SerializeField] private Slider hpSlider;
-    [SerializeField] private Text hpSliderText;
+    [SerializeField] private TextMeshProUGUI hpSliderText;
 
     [Header("Message UI")]
-    [SerializeField] private int sameMessageCount = 0;
+    [SerializeField] private int sameMessageCount = 1;
     [SerializeField] private string lastMessage;
     [SerializeField] private bool isMessageHistoryOpen = false;
     [SerializeField] private GameObject messageHistory;
@@ -66,7 +67,7 @@ public class UIManager : MonoBehaviour
     public void SetHealth(int hp, int maxHp)
     {
         hpSlider.value = hp;
-        hpSliderText.text = $"HP: {hp}/{maxHp}";
+        hpSliderText.text = $"{hp}/{maxHp}";
     }
 
     public void ToggleMenu()
@@ -128,10 +129,11 @@ public class UIManager : MonoBehaviour
     {
         if (lastMessage == newMessage)
         {
-            Text messageHistoryLastChild = messageHistoryContent.transform.GetChild(messageHistoryContent.transform.childCount - 1).GetComponent<Text>();
-            Text lastFiveMessagesLastChild = lastFiveMessagesContent.transform.GetChild(lastFiveMessagesContent.transform.childCount - 1).GetComponent<Text>();
-            messageHistoryLastChild.text = $"{newMessage} (x{++sameMessageCount})";
-            lastFiveMessagesLastChild.text = $"{newMessage} (x{sameMessageCount})";
+            TextMeshProUGUI messageHistoryLastChild = messageHistoryContent.transform.GetChild(messageHistoryContent.transform.childCount - 1).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI lastFiveMessagesLastChild = lastFiveMessagesContent.transform.GetChild(lastFiveMessagesContent.transform.childCount - 1).GetComponent<TextMeshProUGUI>();
+            sameMessageCount += 1;
+            messageHistoryLastChild.text = $"{newMessage} (x{sameMessageCount+1})";
+            lastFiveMessagesLastChild.text = $"{newMessage} (x{sameMessageCount+1})";
             return;
         }
         else if (sameMessageCount > 0)
@@ -141,7 +143,7 @@ public class UIManager : MonoBehaviour
 
         lastMessage = newMessage;
 
-        Text messagePrefab = Instantiate(Resources.Load<Text>("UI/Message")) as Text;
+        TextMeshProUGUI messagePrefab = Instantiate(Resources.Load<TextMeshProUGUI>("UI/Message")) as TextMeshProUGUI;
         messagePrefab.text = newMessage;
         messagePrefab.color = GetColorFromHex(colorHex);
         messagePrefab.transform.SetParent(messageHistoryContent.transform, false);
@@ -153,8 +155,8 @@ public class UIManager : MonoBehaviour
                 return;
             }
 
-            Text messageHistoryChild = messageHistoryContent.transform.GetChild(messageHistoryContent.transform.childCount - 1 - i).GetComponent<Text>();
-            Text lastFiveMessagesChild = lastFiveMessagesContent.transform.GetChild(lastFiveMessagesContent.transform.childCount - 1 - i).GetComponent<Text>();
+            TextMeshProUGUI messageHistoryChild = messageHistoryContent.transform.GetChild(messageHistoryContent.transform.childCount - 1 - i).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI lastFiveMessagesChild = lastFiveMessagesContent.transform.GetChild(lastFiveMessagesContent.transform.childCount - 1 - i).GetComponent<TextMeshProUGUI>();
             lastFiveMessagesChild.text = messageHistoryChild.text;
             lastFiveMessagesChild.color = messageHistoryChild.color;
         }
@@ -179,8 +181,8 @@ public class UIManager : MonoBehaviour
         for (int resetNum = 0; resetNum < menuContent.transform.childCount; resetNum++)
         {
             GameObject menuContentChild = menuContent.transform.GetChild(resetNum).gameObject;
-            menuContentChild.transform.GetChild(0).GetComponent<Text>().text = "";
-            menuContentChild.GetComponent<Button>().onClick.RemoveAllListeners();
+            menuContentChild.GetComponent<ButtonManager>().buttonText = "";
+            menuContentChild.GetComponent<ButtonManager>().onClick.RemoveAllListeners();
             menuContentChild.SetActive(false);
         }
 
@@ -188,8 +190,8 @@ public class UIManager : MonoBehaviour
         {
             GameObject menuContentChild = menuContent.transform.GetChild(itemNum).gameObject;
             Item item = actor.Inventory.Items[itemNum];
-            menuContentChild.transform.GetChild(0).GetComponent<Text>().text = $"({itemNum+1}) {item.name}";
-            menuContentChild.GetComponent<Button>().onClick.AddListener(() =>
+            menuContentChild.GetComponent<ButtonManager>().buttonText = $"({itemNum+1}) {item.name}";
+            menuContentChild.GetComponent<ButtonManager>().onClick.AddListener(() =>
             {
                 if (menuContent == inventoryContent)
                 {
@@ -203,6 +205,7 @@ public class UIManager : MonoBehaviour
             });
             menuContentChild.SetActive(true);
         }
+        eventSystem.SetSelectedGameObject(null);
         eventSystem.SetSelectedGameObject(menuContent.transform.GetChild(0).gameObject);
     }
 }

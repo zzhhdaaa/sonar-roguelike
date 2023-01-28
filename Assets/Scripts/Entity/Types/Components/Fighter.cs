@@ -4,7 +4,7 @@ using UnityEngine;
 using MoreMountains.Feedbacks;
 
 [RequireComponent(typeof(Actor))]
-sealed class Fighter : MonoBehaviour
+public class Fighter : MonoBehaviour
 {
     [SerializeField] private int maxHp, hp, defense, power;
     [SerializeField] private Actor target;
@@ -41,7 +41,7 @@ sealed class Fighter : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         if (GetComponent<Player>())
         {

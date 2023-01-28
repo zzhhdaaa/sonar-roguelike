@@ -30,22 +30,8 @@ public class ConfusedEnemy : AI
         }
         else
         {
-            //move randomly
-            //Vector2Int direction = Random.Range(0, 8) switch
-            //{
-            //    0 => new Vector2Int(0, 1),
-            //    1 => new Vector2Int(0, -1),
-            //    2 => new Vector2Int(1, 0),
-            //    3 => new Vector2Int(-1, 0),
-            //    4 => new Vector2Int(1, 1),
-            //    5 => new Vector2Int(1, y: -1),
-            //    6 => new Vector2Int(-1, 1),
-            //    7 => new Vector2Int(-1, -1),
-            //    _ => new Vector2Int(0, 0)
-            //};
             Vector3Int targetPosition = MapManager.instance.FloorMap.WorldToCell(baitPosition);
             Vector3Int currentPosition = MapManager.instance.FloorMap.WorldToCell(transform.position);
-
 
             if (MapManager.instance.IsValidBaitPosition(baitPosition) && targetPosition != currentPosition)
             {
@@ -68,12 +54,43 @@ public class ConfusedEnemy : AI
                 Action.MovementAction(GetComponent<Actor>(), direction);
             }
 
-
             turnsRemaining--;
-            //Action.WaitAction();
-
-            //stop moving
-            //Action.MovementAction(GetComponent<Actor>(), new Vector2Int(0,0));
         }
+    }
+
+    public override AIState SaveState() => new ConfusedState(
+        type: "ConfusedEnemy",
+        previousAI: previousAI,
+        turnsRemaining: turnsRemaining
+    );
+
+    public void LoadState(ConfusedState state)
+    {
+        if (state.PreviousAI == "HostileEnemy")
+        {
+            previousAI = GetComponent<HostileEnemy>();
+        }
+        turnsRemaining = state.TurnsRemaining;
+    }
+}
+
+[System.Serializable]
+public class ConfusedState : AIState
+{
+    [SerializeField] private string previousAI;
+    [SerializeField] private int turnsRemaining;
+    public string PreviousAI
+    {
+        get => previousAI; set => previousAI = value;
+    }
+    public int TurnsRemaining
+    {
+        get => turnsRemaining; set => turnsRemaining = value;
+    }
+
+    public ConfusedState(string type = "", AI previousAI = null, int turnsRemaining = 0) : base(type)
+    {
+        this.previousAI = previousAI.GetType().ToString();
+        this.turnsRemaining = turnsRemaining;
     }
 }

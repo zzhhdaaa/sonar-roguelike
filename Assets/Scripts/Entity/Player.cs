@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private bool targetMode;
     [SerializeField] private bool isSingleTarget;
     [SerializeField] private GameObject targetObject;
+    [SerializeField] private GameObject targetNormalObject;
 
     private void Awake()
     {
@@ -212,6 +213,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             }
 
             targetObject.SetActive(true);
+            targetNormalObject.SetActive(false);
         }
         else
         {
@@ -221,6 +223,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             }
 
             targetObject.SetActive(false);
+            targetNormalObject.SetActive(true);
             GetComponent<Inventory>().SelectedConsumable = null;
         }
     }
