@@ -184,7 +184,6 @@ public class UIManager : MonoBehaviour
             menuContentChild.SetActive(false);
         }
 
-        char c = 'a';
         for (int itemNum = 0; itemNum < actor.Inventory.Items.Count; itemNum++)
         {
             GameObject menuContentChild = menuContent.transform.GetChild(itemNum).gameObject;

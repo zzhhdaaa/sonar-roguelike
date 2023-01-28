@@ -57,7 +57,7 @@ static public class Action
         }
     }
 
-    static public bool BumpAction(Actor actor, Vector2 direction)
+    static public bool BumpAction(Actor actor, Vector2 direction, bool isSonarActivate = false)
     {
         //check if another actor is on the destination
         Actor target = GameManager.instance.GetActorAtLocation(actor.transform.position + (Vector3)direction);
@@ -65,11 +65,15 @@ static public class Action
         if (target)
         {
             MeleeAction(actor, target);
+            if (isSonarActivate)
+                SonarAction(actor.transform.position);
             return false;
         }
         else
         {
             MovementAction(actor, direction);
+            if (isSonarActivate)
+                SonarAction(actor.transform.position);
             return true;
         }
     }
@@ -114,6 +118,11 @@ static public class Action
         actor.UpdateFieldOfView();
         actor.MoveFeedbacks?.PlayFeedbacks();
         GameManager.instance.EndTurn();
+    }
+
+    static public void SonarAction(Vector3 originPos)
+    {
+        SonarManager.instance.SonarDetect(originPos);
     }
 
     static public void WaitAction()

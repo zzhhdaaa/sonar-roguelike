@@ -20,10 +20,13 @@ public class Explosion : Consumable
 
     public override bool Cast(Actor consumer, List<Actor> targets)
     {
-        foreach (Actor target in targets)
+        if (targets.Count != 0)
         {
-            UIManager.instance.AddMessage($"The explosion caused {damage} damage to {target.name}!", "ff0000");
-            target.GetComponent<Fighter>().Hp -= damage;
+            foreach (Actor target in targets)
+            {
+                UIManager.instance.AddMessage($"The explosion caused {damage} damage to {target.name}!", "ff0000");
+                target.GetComponent<Fighter>().Hp -= damage;
+            }
         }
 
         Consume(consumer);

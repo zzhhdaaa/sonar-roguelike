@@ -41,15 +41,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.started && GetComponent<Actor>().IsAlive)
         {
-            if (targetMode && !moveKeyDown)
-            {
-                moveKeyDown = true;
-                Move();
-            }
-            else if (!targetMode)
-            {
-                moveKeyDown = true;
-            }
+            moveKeyDown = true;
         }
         else if (context.canceled)
         {
@@ -148,11 +140,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 else
                 {
                     List<Actor> targets = AreaTargetChecks(targetObject.transform.position);
+                    Consumable consumable = GetComponent<Inventory>().SelectedConsumable;
 
-                    if (targets != null)
-                    {
-                        Action.CastAction(GetComponent<Actor>(), targets, GetComponent<Inventory>().SelectedConsumable);
-                    }
+                    consumable.gameObject.transform.position = targetObject.transform.position;
+
+                    Action.CastAction(GetComponent<Actor>(), targets, consumable);
+                    Action.SonarAction(targetObject.transform.position);
                 }
             }
         }
@@ -160,7 +153,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void FixedUpdate()
     {
-        if (!UIManager.instance.IsMenuOpen && !targetMode)
+        if (!UIManager.instance.IsMenuOpen)
         {
             if (GameManager.instance.IsPlayerTurn && moveKeyDown && GetComponent<Actor>().IsAlive)
                 Move();
@@ -185,21 +178,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (targetMode)
         {
             Vector3Int targetGridPosition = MapManager.instance.FloorMap.WorldToCell(futurePosition);
-
-            if (MapManager.instance.IsValidPosition(futurePosition) && GetComponent<Actor>().FieldOfView.Contains(targetGridPosition))
-            {
-                targetObject.transform.position = futurePosition;
-            }
+            targetObject.transform.position = futurePosition;
+            moveKeyDown = true;
         }
         else
         {
-            moveKeyDown = Action.BumpAction(GetComponent<Actor>(), roundedDirection); //if bump into an entity, moveKeyDown is set to false
-
-            //detect sonar
-            if (moveKeyDown)
-                SonarManager.instance.SonarDetect(futurePosition);
-            else
-                SonarManager.instance.SonarDetect(transform.position);
+            moveKeyDown = Action.BumpAction(GetComponent<Actor>(), roundedDirection, true); //if bump into an entity, moveKeyDown is set to false
         }
     }
 
@@ -217,8 +201,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (isArea)
             {
                 isSingleTarget = false;
-                targetObject.transform.GetChild(0).localScale = Vector3.one * (radius + 1);
+                targetObject.transform.GetChild(0).GetComponent<SpriteRenderer>().size = Vector2.one * (radius * 2 + 1);
                 targetObject.transform.GetChild(0).gameObject.SetActive(true);
+                targetObject.transform.GetChild(0).GetComponent<SpriteRenderer>().color = GetComponent<Inventory>().SelectedConsumable.GetComponent<SpriteRenderer>().color;
+                targetObject.GetComponent<SpriteRenderer>().color = GetComponent<Inventory>().SelectedConsumable.GetComponent<SpriteRenderer>().color;
             }
             else
             {
@@ -272,7 +258,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private List<Actor> AreaTargetChecks(Vector3 targetPosition)
     {
-        int radius = (int)targetObject.transform.GetChild(0).localScale.x - 1;
+        int radius = (int)(targetObject.transform.GetChild(0).GetComponent<SpriteRenderer>().size.x - 1) / 2;
 
         Bounds targetBounds = new Bounds(targetPosition, Vector3.one * radius * 2);
         List<Actor> targets = new List<Actor>();
@@ -288,7 +274,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (targets.Count == 0)
         {
             UIManager.instance.AddMessage("No targets in the area.", "#ffffff");
-            return null;
+            return targets;
         }
 
         return targets;

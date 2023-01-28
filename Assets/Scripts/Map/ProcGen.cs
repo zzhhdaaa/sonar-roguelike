@@ -18,8 +18,8 @@ sealed class ProcGen
 
             if (roomNum == 0)
             {
-                roomWidth = Random.Range(roomMinSize, roomMaxSize/2);
-                roomHeight = Random.Range(roomMinSize, roomMaxSize/2);
+                roomWidth = 15;
+                roomHeight = 15;
             }
 
             int roomX = Random.Range(0, mapWidth - roomWidth - 1);
@@ -78,6 +78,10 @@ sealed class ProcGen
             {
                 //The first room, where the player starts.
                 MapManager.instance.CreateEntity("Player", newRoom.Center());
+                MapManager.instance.CreateEntity("Sonar Explosion", newRoom.Center() + new Vector2Int(4, 4));
+                MapManager.instance.CreateEntity("Sonar Bait", newRoom.Center() + new Vector2Int(-4, -4));
+                MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(4, -4));
+                MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(-4, 4));
                 //SonarManager.instance.SonarDetect((Vector3Int)newRoom.Center());
             }
 
@@ -197,19 +201,15 @@ sealed class ProcGen
             Debug.Log(randomValue);
             if (randomValue < 0.4f)
             {
-                MapManager.instance.CreateEntity("Potion of Health", new Vector2(itemX, itemY));
+                MapManager.instance.CreateEntity("Healing Potion", new Vector2(itemX, itemY));
             }
             else if (randomValue < 0.7f)
             {
-                MapManager.instance.CreateEntity("Explosion", new Vector2(itemX, itemY));
-            }
-            else if (randomValue < 0.9f)
-            {
-                MapManager.instance.CreateEntity("Confusion", new Vector2(itemX, itemY));
+                MapManager.instance.CreateEntity("Sonar Explosion", new Vector2(itemX, itemY));
             }
             else
             {
-                MapManager.instance.CreateEntity("Lightning", new Vector2(itemX, itemY));
+                MapManager.instance.CreateEntity("Sonar Bait", new Vector2(itemX, itemY));
             }
             item++;
         }

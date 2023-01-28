@@ -85,14 +85,14 @@ public class MapManager : MonoBehaviour
             case "Troll":
                 Instantiate(Resources.Load<GameObject>("Troll"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Troll";
                 break;
-            case "Potion of Health":
-                Instantiate(Resources.Load<GameObject>("Potion of Health"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Potion of Health";
+            case "Healing Potion":
+                Instantiate(Resources.Load<GameObject>("Healing Potion"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Healing Potion";
                 break;
-            case "Explosion":
-                Instantiate(Resources.Load<GameObject>("Explosion"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Explosion";
+            case "Sonar Explosion":
+                Instantiate(Resources.Load<GameObject>("Sonar Explosion"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Sonar Explosion";
                 break;
-            case "Confusion":
-                Instantiate(Resources.Load<GameObject>("Confusion"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Confusion";
+            case "Sonar Bait":
+                Instantiate(Resources.Load<GameObject>("Sonar Bait"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Sonar Bait";
                 break;
             case "Lightning":
                 Instantiate(Resources.Load<GameObject>("Lightning"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity).name = "Lightning";
@@ -179,5 +179,15 @@ public class MapManager : MonoBehaviour
             return false;
 
         return true;
+    }
+
+    public bool IsValidBaitPosition(Vector3 baitPosition)
+    {
+        Vector3Int gridPosition = floorMap.WorldToCell(baitPosition);
+
+        if (floorMap.HasTile(gridPosition))
+            return true;
+
+        return false;
     }
 }

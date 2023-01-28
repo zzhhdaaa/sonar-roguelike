@@ -16,9 +16,9 @@ public class SonarDot : MonoBehaviour
 
     private void UpdateDotColor()
     {
-        if (alpha > 0.1f)
+        if (alpha > 0.06f)
         {
-            alpha /= 1.05f;
+            alpha /= 1.04f;
             spriteRenderer.color = new Color(1, 1, 1, alpha);
         }
         else
