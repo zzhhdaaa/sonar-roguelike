@@ -100,7 +100,7 @@ public class UIManager : MonoBehaviour
 
     public void SetDungeonFloorText(int floor)
     {
-        dungeonFloorText.text = $"Dungeon floor: {floor}";
+        dungeonFloorText.text = $"DUNGEON FLOOR: {floor}";
     }
 
     public void ToggleMenu()
@@ -184,10 +184,10 @@ public class UIManager : MonoBehaviour
         GameObject agilityButton = levelUpMenuContent.transform.GetChild(2).gameObject;
         GameObject sonarButton = levelUpMenuContent.transform.GetChild(3).gameObject;
 
-        constitutionButton.GetComponent<ButtonManager>().buttonText = $"+20 HP, from {actor.GetComponent<Fighter>().MaxHp})";
-        strengthButton.GetComponent<ButtonManager>().buttonText = $"+1 attack, from {actor.GetComponent<Fighter>().Power})";
-        agilityButton.GetComponent<ButtonManager>().buttonText = $"+1 defense, from {actor.GetComponent<Fighter>().Defense})";
-        sonarButton.GetComponent<ButtonManager>().buttonText = $"+5 sonar Radius, from {actor.GetComponent<Fighter>().Defense})";
+        constitutionButton.GetComponent<ButtonManager>().buttonText = $"+ 20 HP";
+        strengthButton.GetComponent<ButtonManager>().buttonText = $"+ 1 attack";
+        agilityButton.GetComponent<ButtonManager>().buttonText = $"+ 1 defense";
+        sonarButton.GetComponent<ButtonManager>().buttonText = $"+ 5 sonar Radius";
 
         foreach (Transform child in levelUpMenuContent.transform)
         {
@@ -212,12 +212,14 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
+                    actor.GetComponent<Level>().IncreaseSonar();
                     Debug.LogError("No button found!");
                 }
                 ToggleLevelUpMenu(actor);
             });
         }
 
+        GameManager.instance.Actors[0].GetComponent<Player>().StartCoroutine(GameManager.instance.Actors[0].GetComponent<Player>().WaitToBorn(0.2f));
         eventSystem.SetSelectedGameObject(levelUpMenuContent.transform.GetChild(0).gameObject);
     }
 

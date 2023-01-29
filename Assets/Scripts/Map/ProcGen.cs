@@ -204,6 +204,12 @@ sealed class ProcGen
             int itemX = Random.Range(newRoom.X + 1, newRoom.X + newRoom.Width - 1);
             int itemY = Random.Range(newRoom.Y + 1, newRoom.Y + newRoom.Height - 1);
 
+            if (itemX == newRoom.Center().x && itemY == newRoom.Center().y)
+            {
+                Debug.Log("At center!");
+                return;
+            }
+
             for (int entity = 0; entity < GameManager.instance.Entities.Count; entity++)
             {
                 //don't overlap any existing entity
