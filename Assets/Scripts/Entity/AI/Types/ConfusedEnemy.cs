@@ -26,7 +26,7 @@ public class ConfusedEnemy : AI
             UIManager.instance.AddMessage($"The {gameObject.name} is no longer confused.", "#ff0000");
             GetComponent<Actor>().AI = previousAI;
             GetComponent<Actor>().AI.RunAI();
-            Destroy(this);
+            //Destroy(this);
         }
         else
         {

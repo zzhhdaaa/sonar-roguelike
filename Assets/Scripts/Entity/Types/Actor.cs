@@ -124,10 +124,10 @@ public class Actor : Entity
             }
             else if (state.CurrentAI.Type == "ConfusedEnemy")
             {
-                aI = gameObject.AddComponent<ConfusedEnemy>();
+                aI = GetComponent<ConfusedEnemy>();
 
-                ConfusedState confusedState = state.CurrentAI as ConfusedState;
-                ((ConfusedEnemy)aI).LoadState(confusedState);
+                //ConfusedState confusedState = state.CurrentAI as ConfusedState;
+                //((ConfusedEnemy)aI).LoadState(confusedState);
             }
         }
 

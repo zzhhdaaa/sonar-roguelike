@@ -14,7 +14,7 @@ public class Confusion : Consumable
     {
         consumer.GetComponent<Inventory>().SelectedConsumable = this;
         consumer.GetComponent<Player>().ToggleTargetMode(true, radius);
-        UIManager.instance.AddMessage($"Select a target to confuse.", "#0000ff");
+        UIManager.instance.AddMessage($"Select to place the Sonar Bait.", "#0000ff");
         return false;
     }
 
@@ -22,21 +22,28 @@ public class Confusion : Consumable
     {
         foreach (Actor target in targets)
         {
-            if (target.TryGetComponent(out ConfusedEnemy confusedEnemy))
+            if (target.GetComponent<Player>())
             {
-                if (confusedEnemy.TurnsRemaining > 0)
-                {
-                    UIManager.instance.AddMessage($"The {target.name} is already confused.", "#0000ff");
-                    consumer.GetComponent<Inventory>().SelectedConsumable = null;
-                    consumer.GetComponent<Player>().ToggleTargetMode();
-                    return false;
-                }
+                continue;
             }
-            else
-            {
-                confusedEnemy = target.gameObject.AddComponent<ConfusedEnemy>();
-            }
-            confusedEnemy.PreviousAI = target.AI;
+
+            //if (target.TryGetComponent(out ConfusedEnemy confusedEnemy))
+            //{
+            //    if (confusedEnemy.TurnsRemaining > 0)
+            //    {
+            //        UIManager.instance.AddMessage($"The {target.name} is already confused.", "#0000ff");
+            //        consumer.GetComponent<Inventory>().SelectedConsumable = null;
+            //        consumer.GetComponent<Player>().ToggleTargetMode();
+            //        return false;
+            //    }
+            //}
+            //else
+            //{
+            //    confusedEnemy = target.gameObject.AddComponent<ConfusedEnemy>();
+            //}
+
+            ConfusedEnemy confusedEnemy = target.gameObject.GetComponent<ConfusedEnemy>();
+            //confusedEnemy.PreviousAI = target.AI;
             confusedEnemy.TurnsRemaining = NumberOfTurns;
             confusedEnemy.BaitTargetPosition = transform.position;
 

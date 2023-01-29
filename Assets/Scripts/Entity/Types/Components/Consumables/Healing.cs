@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static Consumable;
-using static UnityEditor.Progress;
 
 public class Healing : Consumable
 {

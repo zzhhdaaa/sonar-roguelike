@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -948884233022302403}
   - component: {fileID: -5378566793192857058}
   - component: {fileID: -8679610251502234124}
+  - component: {fileID: 4514072493881920674}
   m_Layer: 0
   m_Name: Orc
   m_TagString: Untagged
@@ -176,6 +177,22 @@ MonoBehaviour:
   levelUpBase: 200
   levelUpFactor: 150
   xpGiven: 30
+--- !u!114 &4514072493881920674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638275936358703591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04a32ee84cc8c5544aaf262b96d98000, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aStar: {fileID: -948884233022302403}
+  previousAI: {fileID: -5378566793192857058}
+  turnsRemaining: 0
+  baitPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &813223801999340745
 GameObject:
   m_ObjectHideFlags: 0
