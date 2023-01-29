@@ -82,6 +82,51 @@ public class Actor : Entity
             MapManager.instance.SetEntitiesVisibilities();
         }
     }
+    public override EntityState SaveState() => new ActorState(
+        name: name,
+        blocksMovement: BlocksMovement,
+        isAlive: IsAlive,
+        isVisible: MapManager.instance.VisibleTiles.Contains(MapManager.instance.FloorMap.WorldToCell(transform.position)),
+        position: transform.position,
+        currentAI: aI != null ? AI.SaveState() : null,
+        fighterState: fighter != null ? fighter.SaveState() : null
+    );
+
+    public void LoadState(ActorState state)
+    {
+        transform.position = state.Position;
+        isAlive = state.IsAlive;
+
+        if (!IsAlive)
+        {
+            GameManager.instance.RemoveActor(this);
+        }
+
+        if (!state.IsVisible)
+        {
+            GetComponent<SpriteRenderer>().enabled = false;
+        }
+
+        if (state.CurrentAI != null)
+        {
+            if (state.CurrentAI.Type == "HostileEnemy")
+            {
+                aI = GetComponent<HostileEnemy>();
+            }
+            else if (state.CurrentAI.Type == "ConfusedEnemy")
+            {
+                aI = gameObject.AddComponent<ConfusedEnemy>();
+
+                ConfusedState confusedState = state.CurrentAI as ConfusedState;
+                ((ConfusedEnemy)aI).LoadState(confusedState);
+            }
+        }
+
+        if (state.FighterState != null)
+        {
+            fighter.LoadState(state.FighterState);
+        }
+    }
 }
 
 [System.Serializable]

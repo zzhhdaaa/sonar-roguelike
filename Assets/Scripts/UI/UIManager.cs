@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using Michsky.UI.Reach;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -36,11 +37,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject dropMenu;
     [SerializeField] private GameObject dropMenuContent;
 
-    
+    [Header("Instructions UI")]
+    [SerializeField] private GameObject instructions;
+
+    [Header("Escape Menu UI")]
+    [SerializeField] private bool isEscapeMenuOpen = false; //Read-only
+    [SerializeField] private GameObject escapeMenu;
+
     public bool IsMenuOpen { get => isMenuOpen; }
     public bool IsMessageHistoryOpen { get => isMessageHistoryOpen; }
     public bool IsInventoryOpen { get => isInventoryOpen; }
     public bool IsDropMenuOpen { get => isDropMenuOpen; }
+    public bool IsEscapeMenuOpen { get => isEscapeMenuOpen; }
 
     private void Awake()
     {
@@ -76,21 +84,23 @@ public class UIManager : MonoBehaviour
         {
             isMenuOpen = !isMenuOpen;
 
-            if (isMessageHistoryOpen)
+            switch (true)
             {
-                ToggleMessageHistory();
+                case bool _ when isMessageHistoryOpen:
+                    ToggleMessageHistory();
+                    break;
+                case bool _ when isInventoryOpen:
+                    ToggleInventory();
+                    break;
+                case bool _ when isDropMenuOpen:
+                    ToggleDropMenu();
+                    break;
+                case bool _ when isEscapeMenuOpen:
+                    ToggleEscapeMenu();
+                    break;
+                default:
+                    break;
             }
-
-            if (isInventoryOpen)
-            {
-                ToggleInventory();
-            }
-
-            if (isDropMenuOpen)
-            {
-                ToggleDropMenu();
-            }
-            return;
         }
     }
 
@@ -104,6 +114,7 @@ public class UIManager : MonoBehaviour
     public void ToggleInventory(Actor actor = null)
     {
         inventory.SetActive(!inventory.activeSelf);
+        instructions.SetActive(!instructions.activeSelf);
         isMenuOpen = inventory.activeSelf;
         isInventoryOpen = inventory.activeSelf;
 
@@ -116,6 +127,7 @@ public class UIManager : MonoBehaviour
     public void ToggleDropMenu(Actor actor = null)
     {
         dropMenu.SetActive(!dropMenu.activeSelf);
+        instructions.SetActive(!instructions.activeSelf);
         isMenuOpen = dropMenu.activeSelf;
         isDropMenuOpen = dropMenu.activeSelf;
 
@@ -123,6 +135,35 @@ public class UIManager : MonoBehaviour
         {
             UpdateMenu(actor, dropMenuContent);
         }
+    }
+
+    public void ToggleEscapeMenu()
+    {
+        escapeMenu.SetActive(!escapeMenu.activeSelf);
+        isMenuOpen = escapeMenu.activeSelf;
+        isEscapeMenuOpen = escapeMenu.activeSelf;
+
+        if (isMenuOpen)
+        {
+            eventSystem.SetSelectedGameObject(escapeMenu.transform.GetChild(0).gameObject);
+        }
+    }
+
+    public void Save()
+    {
+        SaveManager.instance.SaveGame();
+    }
+
+    public void Load()
+    {
+        SaveManager.instance.LoadGame();
+        ToggleMenu();
+    }
+
+    public void Quit()
+    {
+        //SceneManager.LoadScene(0);
+        Application.Quit();
     }
 
     public void AddMessage(string newMessage, string colorHex)

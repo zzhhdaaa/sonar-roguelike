@@ -10997,6 +10997,7 @@ MonoBehaviour:
   isSingleTarget: 0
   targetObject: {fileID: 8052413317578350974}
   targetNormalObject: {fileID: 5564802604364694524}
+  bornFeedbacks: {fileID: 8142316056776603135}
 --- !u!114 &-4074571794349341402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11014,6 +11015,7 @@ MonoBehaviour:
   fieldOfViewRange: 8
   fieldOfView: []
   aI: {fileID: 0}
+  fighter: {fileID: -3212632608899535971}
   inventory: {fileID: -6035331603039505962}
   moveFeedbacks: {fileID: 7568301483849981783}
   pickupFeedbacks: {fileID: 8142316056776603135}

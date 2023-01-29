@@ -2,17 +2,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Michsky.UI.Reach;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private EventSystem eventSystem;
-    [SerializeField] private Button continueButton;
+    [SerializeField] private ButtonManager continueButton;
 
     private void Start()
     {
         if (!SaveManager.instance.HasSaveAvailable())
         {
-            continueButton.interactable = false;
+            continueButton.isInteractable = false;
         }
         else
         {

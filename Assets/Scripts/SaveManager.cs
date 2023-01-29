@@ -9,7 +9,7 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance;
 
     [SerializeField] private int currentFloor = 0;
-    [SerializeField] private string saveFileName = "saveThe.koala";
+    [SerializeField] private string saveFileName = "saveThe.daaa";
     [SerializeField] private SaveData save = new SaveData();
 
     public int CurrentFloor { get => currentFloor; set => currentFloor = value; }

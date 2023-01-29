@@ -1,7 +1,10 @@
+using MoreMountains.Feedbacks;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, Controls.IPlayerActions
 {
@@ -15,6 +18,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private bool isSingleTarget;
     [SerializeField] private GameObject targetObject;
     [SerializeField] private GameObject targetNormalObject;
+    [SerializeField] private MMFeedbacks bornFeedbacks;
 
     private void Awake()
     {
@@ -23,7 +27,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void Start()
     {
-        SonarManager.instance.SonarDetect(transform.position); //detect sonar
+        StartCoroutine(WaitToBorn(0.2f));
     }
 
     private void OnEnable()
@@ -54,7 +58,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed)
         {
-            if (UIManager.instance.IsMenuOpen)
+            if (!UIManager.instance.IsEscapeMenuOpen && !UIManager.instance.IsMenuOpen)
+            {
+                UIManager.instance.ToggleEscapeMenu();
+            }
+            else if (UIManager.instance.IsMenuOpen)
             {
                 UIManager.instance.ToggleMenu();
             }
@@ -281,5 +289,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
 
         return targets;
+    }
+
+    private IEnumerator WaitToBorn(float time)
+    {
+        yield return new WaitForSeconds(time);
+        SonarManager.instance.SonarDetect(transform.position); //detect sonar
+        bornFeedbacks?.PlayFeedbacks();
     }
 }

@@ -160,6 +160,17 @@
                 },
                 {
                     "name": "",
+                    "id": "9067bf90-1d4d-457f-bba0-e3ed24a576a9",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Arrow Keys",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "9dbc90c8-1272-4913-886a-f5c931db1710",
                     "path": "<Keyboard>/e",
                     "interactions": "",
@@ -195,6 +206,17 @@
                     "name": "",
                     "id": "c9e02973-4048-44fc-84b0-c54dee398737",
                     "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Arrow Keys",
+                    "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4726b8d-c9e0-4fa1-b4d1-fd23cd3fa2e0",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "Arrow Keys",

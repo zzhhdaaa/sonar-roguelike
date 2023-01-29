@@ -43,15 +43,17 @@ public class Fighter : MonoBehaviour
 
     public void Die()
     {
-        if (GetComponent<Player>())
+        if (GetComponent<Actor>().IsAlive)
         {
-            //Debug.Log($"You died!");
-            UIManager.instance.AddMessage($"You died!", "#ff0000");
-        }
-        else
-        {
-            //Debug.Log($"{name} is dead!");
-            UIManager.instance.AddMessage($"{name} is dead!", "#ffa500");
+            if (GetComponent<Player>())
+            {
+                UIManager.instance.AddMessage("You died!", "#ff0000"); //Red
+            }
+            else
+            {
+                UIManager.instance.AddMessage($"{name} is dead!", "#ffa500"); //Light Orange
+            }
+            GetComponent<Actor>().IsAlive = false;
         }
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
@@ -61,7 +63,6 @@ public class Fighter : MonoBehaviour
 
         name = $"Remains of {name}";
         GetComponent<Actor>().BlocksMovement = false;
-        GetComponent<Actor>().IsAlive = false;
         if (!GetComponent<Player>())
         {
             GameManager.instance.RemoveActor(this.GetComponent<Actor>());
@@ -85,5 +86,58 @@ public class Fighter : MonoBehaviour
         int amountRecovered = newHpValue - hp;
         Hp = newHpValue;
         return amountRecovered;
+    }
+    public FighterState SaveState() => new FighterState(
+        maxHp: maxHp,
+        hp: hp,
+        defense: defense,
+        power: power,
+        target: target != null ? target.name : null
+    );
+
+    public void LoadState(FighterState state)
+    {
+        maxHp = state.MaxHp;
+        hp = state.Hp;
+        defense = state.Defense;
+        power = state.Power;
+        target = GameManager.instance.Actors.Find(a => a.name == state.Target);
+    }
+}
+
+//[System.Serializable]
+public class FighterState
+{
+    [SerializeField] private int maxHp, hp, defense, power;
+    [SerializeField] private string target;
+
+    public int MaxHp
+    {
+        get => maxHp; set => maxHp = value;
+    }
+    public int Hp
+    {
+        get => hp; set => hp = value;
+    }
+    public int Defense
+    {
+        get => defense; set => defense = value;
+    }
+    public int Power
+    {
+        get => power; set => power = value;
+    }
+    public string Target
+    {
+        get => target; set => target = value;
+    }
+
+    public FighterState(int maxHp, int hp, int defense, int power, string target)
+    {
+        this.maxHp = maxHp;
+        this.hp = hp;
+        this.defense = defense;
+        this.power = power;
+        this.target = target;
     }
 }

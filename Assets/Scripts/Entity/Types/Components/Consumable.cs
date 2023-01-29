@@ -17,11 +17,11 @@ public class Consumable : MonoBehaviour
 
     public void Consume(Actor consumer)
     {
+        gameObject.SetActive(true);
         if (consumer.GetComponent<Inventory>().SelectedConsumable == this)
         {
             consumer.GetComponent<Inventory>().SelectedConsumable = null;
         }
-        gameObject.SetActive(true);
         gameObject.transform.SetParent(null, true);
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
         consumer.Inventory.Items.Remove(GetComponent<Item>());

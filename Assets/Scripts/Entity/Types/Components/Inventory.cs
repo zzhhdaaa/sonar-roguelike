@@ -13,6 +13,13 @@ public class Inventory : MonoBehaviour
     public Consumable SelectedConsumable { get { return selectedConsumable; } set { selectedConsumable = value; } }
     public List<Item> Items { get { return items; } }
 
+    public void Add(Item item)
+    {
+        items.Add(item);
+        item.transform.SetParent(transform);
+        GameManager.instance.RemoveEntity(item);
+    }
+
     public void Drop(Item item)
     {
         items.Remove(item);
