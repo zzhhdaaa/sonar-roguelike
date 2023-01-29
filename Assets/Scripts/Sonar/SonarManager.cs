@@ -16,9 +16,10 @@ public class SonarManager : MonoBehaviour
 
     private List<Vector3> directions = new List<Vector3>();
 
-    public float Distance { get { return distance; } }
+    public float Distance { get { return distance; } set { distance = value; } }
 
     public UnityEvent SonarUpdated;
+    public UnityEvent SonarDownGrade;
 
     void Start()
     {
@@ -30,7 +31,7 @@ public class SonarManager : MonoBehaviour
         CalDirection();
     }
 
-    public void SonarDetect(Vector3 originPos)
+    public void SonarDetect(Vector3 originPos, float distance)
     {
         SonarUpdated?.Invoke();
         foreach (Vector3 direction in directions)

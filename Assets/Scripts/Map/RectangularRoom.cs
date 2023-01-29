@@ -22,6 +22,8 @@ public class RectangularRoom
 
     public Vector2Int Center() => new Vector2Int(x + width / 2, y + height / 2);
 
+    public Vector2Int RandomPoint() => new Vector2Int(Random.Range(x + 1, x + width - 1), Random.Range(y + 1, y + height - 1));
+
     public Bounds GetBounds() => new Bounds(new Vector3(x, y, 0), new Vector3(width, height, 0));
 
     public BoundsInt GetBoundsInt() => new BoundsInt(new Vector3Int(x, y, 0), new Vector3Int(width, height, 0));

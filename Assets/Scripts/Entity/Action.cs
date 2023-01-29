@@ -1,8 +1,45 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 static public class Action
 {
+    static public void TakeStairsAction(Actor actor)
+    {
+        Vector3Int pos = MapManager.instance.FloorMap.WorldToCell(actor.transform.position);
+        string tileName = MapManager.instance.FloorMap.GetTile(pos).name;
+
+        //if (tileName != MapManager.instance.UpStairsTile.name && tileName != MapManager.instance.DownStairsTile.name)
+        //{
+        //    UIManager.instance.AddMessage("There are no stairs here.", "#0da2ff");
+        //    return;
+        //}
+
+        //if (SaveManager.instance.CurrentFloor == 1 && tileName == MapManager.instance.UpStairsTile.name)
+        //{
+        //    UIManager.instance.AddMessage("A mysterious force prevents you from going back.", "#0da2ff");
+        //    return;
+        //}
+
+        SaveManager.instance.SaveGame();
+        SaveManager.instance.CurrentFloor += tileName == MapManager.instance.UpStairsTile.name ? -1 : 1;
+
+        if (SaveManager.instance.Save.Scenes.Exists(x => x.FloorNumber == SaveManager.instance.CurrentFloor))
+        {
+            SaveManager.instance.LoadScene(false);
+        }
+        else
+        {
+            GameManager.instance.Reset(false);
+            MapManager.instance.GenerateDungeon();
+        }
+
+        UIManager.instance.AddMessage("You take the stairs.", "#0da2ff");
+        UIManager.instance.SetDungeonFloorText(SaveManager.instance.CurrentFloor);
+
+        SonarManager.instance.SonarDownGrade?.Invoke();
+    }
+
     static public void PickupAction(Actor actor)
     {
         for (int i = 0; i < GameManager.instance.Entities.Count; i++)
@@ -10,6 +47,13 @@ static public class Action
             if (GameManager.instance.Entities[i].GetComponent<Actor>() || actor.transform.position != GameManager.instance.Entities[i].transform.position)
             {
                 continue;
+            }
+
+            if (GameManager.instance.Entities[i].GetComponent<Stair>())
+            {
+                GameManager.instance.Entities[i].GetComponent<Stair>().Consume(GameManager.instance.Actors[0]);
+                Action.TakeStairsAction(actor);
+                return;
             }
 
             if (actor.Inventory.Items.Count >= actor.Inventory.Capacity)
@@ -64,14 +108,14 @@ static public class Action
         {
             MeleeAction(actor, target);
             if (isSonarActivate)
-                SonarAction(actor.transform.position);
+                SonarAction(actor.transform.position, SonarManager.instance.Distance);
             return false;
         }
         else
         {
             MovementAction(actor, direction);
             if (isSonarActivate)
-                SonarAction(actor.transform.position);
+                SonarAction(actor.transform.position, SonarManager.instance.Distance);
             return true;
         }
     }
@@ -118,9 +162,9 @@ static public class Action
         GameManager.instance.EndTurn();
     }
 
-    static public void SonarAction(Vector3 originPos)
+    static public void SonarAction(Vector3 originPos, float distance)
     {
-        SonarManager.instance.SonarDetect(originPos);
+        SonarManager.instance.SonarDetect(originPos, distance);
     }
 
     static public void WaitAction()

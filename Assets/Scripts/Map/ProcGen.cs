@@ -9,7 +9,7 @@ sealed class ProcGen
     /// The Procedural Generator generates each level of the game.
     /// Including placing rooms, creating tunnels, placing player and monsters.
     /// </summary>
-    public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, int maxMonstersPerRoom, int maxItemsPerRoom, List<RectangularRoom> rooms)
+    public void GenerateDungeon(int mapWidth, int mapHeight, int roomMaxSize, int roomMinSize, int maxRooms, int maxMonstersPerRoom, int maxItemsPerRoom, List<RectangularRoom> rooms, bool isNewGame)
     {
         for (int roomNum = 0; roomNum < maxRooms; roomNum++)
         {
@@ -77,7 +77,22 @@ sealed class ProcGen
             else
             {
                 //The first room, where the player starts.
-                MapManager.instance.CreateEntity("Player", newRoom.Center());
+                Vector3Int playerPos = (Vector3Int)newRoom.Center();
+
+                //MapManager.instance.FloorMap.SetTile(playerPos, MapManager.instance.UpStairsTile);
+
+                if (isNewGame)
+                {
+                    MapManager.instance.CreateEntity("Player", (Vector2Int)playerPos);
+                }
+                else
+                {
+                    GameManager.instance.Actors[0].GetComponent<Player>().StairUpFeedbacks?.PlayFeedbacks();
+                    GameManager.instance.Actors[0].transform.position = new Vector3(playerPos.x + 0.5f, playerPos.y + 0.5f, 0);
+                    GameManager.instance.Actors[0].GetComponent<Player>().StartCoroutine(GameManager.instance.Actors[0].GetComponent<Player>().WaitToBorn(0.8f));
+                }
+
+                //MapManager.instance.CreateEntity("Player", newRoom.Center());
                 MapManager.instance.CreateEntity("Sonar Explosion", newRoom.Center() + new Vector2Int(4, 4));
                 MapManager.instance.CreateEntity("Sonar Bait", newRoom.Center() + new Vector2Int(-4, -4));
                 MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(4, -4));
@@ -87,6 +102,9 @@ sealed class ProcGen
 
             rooms.Add(newRoom);
         }
+
+        //Add the stairs to the last room.
+        MapManager.instance.CreateEntity("Stair", rooms[rooms.Count - 1].Center());
     }
 
     private void TunnelBetween(RectangularRoom oldRoom, RectangularRoom newRoom)

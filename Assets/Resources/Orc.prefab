@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -5161024450811943100}
   - component: {fileID: -948884233022302403}
   - component: {fileID: -5378566793192857058}
+  - component: {fileID: -8679610251502234124}
   m_Layer: 0
   m_Name: Orc
   m_TagString: Untagged
@@ -107,8 +108,11 @@ MonoBehaviour:
   fieldOfViewRange: 15
   fieldOfView: []
   aI: {fileID: -5378566793192857058}
+  fighter: {fileID: -5161024450811943100}
+  level: {fileID: -8679610251502234124}
   inventory: {fileID: 0}
   moveFeedbacks: {fileID: 5638447100289281254}
+  pickupFeedbacks: {fileID: 0}
 --- !u!114 &-5161024450811943100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,6 +158,24 @@ MonoBehaviour:
   aStar: {fileID: -948884233022302403}
   fighter: {fileID: -5161024450811943100}
   isFighting: 0
+--- !u!114 &-8679610251502234124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638275936358703591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501ba813d78bb8940943a119242c8c81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentLevel: 1
+  currentXp: 0
+  xpToNextLevel: 350
+  levelUpBase: 200
+  levelUpFactor: 150
+  xpGiven: 30
 --- !u!1 &813223801999340745
 GameObject:
   m_ObjectHideFlags: 0

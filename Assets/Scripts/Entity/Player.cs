@@ -19,6 +19,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private GameObject targetObject;
     [SerializeField] private GameObject targetNormalObject;
     [SerializeField] private MMFeedbacks bornFeedbacks;
+    [SerializeField] private MMFeedbacks stairUpFeedbacks;
+
+    public MMFeedbacks StairUpFeedbacks { get { return stairUpFeedbacks; } }
 
     private void Awake()
     {
@@ -58,17 +61,17 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed)
         {
-            if (!UIManager.instance.IsEscapeMenuOpen && !UIManager.instance.IsMenuOpen)
+            if (targetMode)
+            {
+                ToggleTargetMode();
+            }
+            else if (!UIManager.instance.IsEscapeMenuOpen && !UIManager.instance.IsMenuOpen)
             {
                 UIManager.instance.ToggleEscapeMenu();
             }
             else if (UIManager.instance.IsMenuOpen)
             {
                 UIManager.instance.ToggleMenu();
-            }
-            else if (targetMode)
-            {
-                ToggleTargetMode();
             }
         }
     }
@@ -154,8 +157,19 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                     consumable.gameObject.transform.position = targetObject.transform.position;
 
                     Action.CastAction(GetComponent<Actor>(), targets, consumable);
-                    Action.SonarAction(targetObject.transform.position);
+                    Action.SonarAction(targetObject.transform.position, SonarManager.instance.Distance * 2);
                 }
+            }
+        }
+    }
+
+    public void OnInfo(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (CanAct() || UIManager.instance.IsCharacterInformationMenuOpen)
+            {
+                UIManager.instance.ToggleCharacterInformationMenu(GetComponent<Actor>());
             }
         }
     }
@@ -291,10 +305,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         return targets;
     }
 
-    private IEnumerator WaitToBorn(float time)
+    public IEnumerator WaitToBorn(float time)
     {
         yield return new WaitForSeconds(time);
-        SonarManager.instance.SonarDetect(transform.position); //detect sonar
+        Action.SonarAction(transform.position, SonarManager.instance.Distance * 1.5f); //detect sonar
         bornFeedbacks?.PlayFeedbacks();
     }
 }

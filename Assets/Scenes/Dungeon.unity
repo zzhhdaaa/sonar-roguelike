@@ -1604,6 +1604,8 @@ MonoBehaviour:
   floorTile: {fileID: 11400000, guid: 6b27013c1f760f9498f1b22af18eb25b, type: 2}
   wallTile: {fileID: 11400000, guid: df06e1ce4e7f3ef4a92c53e41d2d7e5e, type: 2}
   fogTile: {fileID: 11400000, guid: 7136e607c9b6182419be4288c9954c41, type: 2}
+  upStairsTile: {fileID: 11400000, guid: 4f9c9a139dbb0444cb04691ab93724fe, type: 2}
+  downStairsTile: {fileID: 11400000, guid: 4f9c9a139dbb0444cb04691ab93724fe, type: 2}
   floorMap: {fileID: 926309406}
   obstacleMap: {fileID: 958826620}
   fogMap: {fileID: 1272245757}

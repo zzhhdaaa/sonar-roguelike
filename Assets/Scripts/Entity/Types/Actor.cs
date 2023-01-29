@@ -9,6 +9,7 @@ public class Actor : Entity
     [SerializeField] private List<Vector3Int> fieldOfView = new List<Vector3Int>();
     [SerializeField] private AI aI;
     [SerializeField] private Fighter fighter;
+    [SerializeField] private Level level;
     [SerializeField] private Inventory inventory;
     [SerializeField] private MMFeedbacks moveFeedbacks;
     [SerializeField] private MMFeedbacks pickupFeedbacks;
@@ -19,6 +20,8 @@ public class Actor : Entity
     public List<Vector3Int> FieldOfView { get { return fieldOfView; } }
     public Inventory Inventory { get { return inventory; } }
     public AI AI { get { return aI; } set { aI = value; } }
+    public Fighter Fighter { get { return fighter; } set { fighter = value; } }
+    public Level Level { get { return level; } set { level = value; } }
     public MMFeedbacks MoveFeedbacks { get { return moveFeedbacks; } }
     public MMFeedbacks PickupFeedbacks { get { return pickupFeedbacks; } }
 
@@ -37,6 +40,11 @@ public class Actor : Entity
         if (GetComponent<Fighter>())
         {
             fighter = GetComponent<Fighter>();
+        }
+
+        if (GetComponent<Level>())
+        {
+            level = GetComponent<Level>();
         }
     }
 
@@ -89,7 +97,8 @@ public class Actor : Entity
         isVisible: MapManager.instance.VisibleTiles.Contains(MapManager.instance.FloorMap.WorldToCell(transform.position)),
         position: transform.position,
         currentAI: aI != null ? AI.SaveState() : null,
-        fighterState: fighter != null ? fighter.SaveState() : null
+        fighterState: fighter != null ? fighter.SaveState() : null,
+        levelState: level != null && GetComponent<Player>() ? level.SaveState() : null
     );
 
     public void LoadState(ActorState state)
@@ -126,6 +135,11 @@ public class Actor : Entity
         {
             fighter.LoadState(state.FighterState);
         }
+
+        if (state.LevelState != null)
+        {
+            level.LoadState(state.LevelState);
+        }
     }
 }
 
@@ -135,6 +149,7 @@ public class ActorState : EntityState
     [SerializeField] private bool isAlive;
     [SerializeField] private AIState currentAI;
     [SerializeField] private FighterState fighterState;
+    [SerializeField] private LevelState levelState;
 
     public bool IsAlive
     {
@@ -148,12 +163,17 @@ public class ActorState : EntityState
     {
         get => fighterState; set => fighterState = value;
     }
+    public LevelState LevelState
+    {
+        get => levelState; set => levelState = value;
+    }
 
     public ActorState(EntityType type = EntityType.Actor, string name = "", bool blocksMovement = false, bool isVisible = false, Vector3 position = new Vector3(),
-     bool isAlive = true, AIState currentAI = null, FighterState fighterState = null) : base(type, name, blocksMovement, isVisible, position)
+     bool isAlive = true, AIState currentAI = null, FighterState fighterState = null, LevelState levelState = null) : base(type, name, blocksMovement, isVisible, position)
     {
         this.isAlive = isAlive;
         this.currentAI = currentAI;
         this.fighterState = fighterState;
+        this.levelState = levelState;
     }
 }

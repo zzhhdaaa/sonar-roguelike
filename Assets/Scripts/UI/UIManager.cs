@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private bool isMenuOpen = false;
+    [SerializeField] private TextMeshProUGUI dungeonFloorText;
 
     [Header("Health UI")]
     [SerializeField] private Slider hpSlider;
@@ -44,11 +45,21 @@ public class UIManager : MonoBehaviour
     [SerializeField] private bool isEscapeMenuOpen = false; //Read-only
     [SerializeField] private GameObject escapeMenu;
 
+    [Header("Character Information Menu UI")]
+    [SerializeField] private bool isCharacterInformationMenuOpen = false; //Read-only
+    [SerializeField] private GameObject characterInformationMenu;
+
+    [Header("Level Up Menu UI")]
+    [SerializeField] private bool isLevelUpMenuOpen = false; //Read-only
+    [SerializeField] private GameObject levelUpMenu;
+    [SerializeField] private GameObject levelUpMenuContent;
+
     public bool IsMenuOpen { get => isMenuOpen; }
     public bool IsMessageHistoryOpen { get => isMessageHistoryOpen; }
     public bool IsInventoryOpen { get => isInventoryOpen; }
     public bool IsDropMenuOpen { get => isDropMenuOpen; }
     public bool IsEscapeMenuOpen { get => isEscapeMenuOpen; }
+    public bool IsCharacterInformationMenuOpen { get => isCharacterInformationMenuOpen; }
 
     private void Awake()
     {
@@ -64,7 +75,16 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        AddMessage("Hello and welcome to the dungeon! Move to activate your sonar.", "#0da2ff");
+        SetDungeonFloorText(SaveManager.instance.CurrentFloor);
+
+        if (SaveManager.instance.Save.SavedFloor is 0)
+        {
+            AddMessage("Hello and welcome to the dungeon! Move to activate your sonar.", "#0da2ff"); //Light blue
+        }
+        else
+        {
+            AddMessage("Welcome back, adventurer!", "#0da2ff"); //Light blue
+        }
     }
 
     public void SetHealthMax(int maxHp)
@@ -75,7 +95,12 @@ public class UIManager : MonoBehaviour
     public void SetHealth(int hp, int maxHp)
     {
         hpSlider.value = hp;
-        hpSliderText.text = $"{hp}/{maxHp}";
+        hpSliderText.text = $"HEALTH {hp}/{maxHp}";
+    }
+
+    public void SetDungeonFloorText(int floor)
+    {
+        dungeonFloorText.text = $"Dungeon floor: {floor}";
     }
 
     public void ToggleMenu()
@@ -97,6 +122,9 @@ public class UIManager : MonoBehaviour
                     break;
                 case bool _ when isEscapeMenuOpen:
                     ToggleEscapeMenu();
+                    break;
+                case bool _ when isCharacterInformationMenuOpen:
+                    ToggleCharacterInformationMenu();
                     break;
                 default:
                     break;
@@ -143,20 +171,87 @@ public class UIManager : MonoBehaviour
         isMenuOpen = escapeMenu.activeSelf;
         isEscapeMenuOpen = escapeMenu.activeSelf;
 
-        if (isMenuOpen)
+        eventSystem.SetSelectedGameObject(escapeMenu.transform.GetChild(0).gameObject);
+    }
+
+    public void ToggleLevelUpMenu(Actor actor)
+    {
+        isLevelUpMenuOpen = !isLevelUpMenuOpen;
+        SetBooleans(levelUpMenu, isLevelUpMenuOpen);
+
+        GameObject constitutionButton = levelUpMenuContent.transform.GetChild(0).gameObject;
+        GameObject strengthButton = levelUpMenuContent.transform.GetChild(1).gameObject;
+        GameObject agilityButton = levelUpMenuContent.transform.GetChild(2).gameObject;
+        GameObject sonarButton = levelUpMenuContent.transform.GetChild(3).gameObject;
+
+        constitutionButton.GetComponent<ButtonManager>().buttonText = $"+20 HP, from {actor.GetComponent<Fighter>().MaxHp})";
+        strengthButton.GetComponent<ButtonManager>().buttonText = $"+1 attack, from {actor.GetComponent<Fighter>().Power})";
+        agilityButton.GetComponent<ButtonManager>().buttonText = $"+1 defense, from {actor.GetComponent<Fighter>().Defense})";
+        sonarButton.GetComponent<ButtonManager>().buttonText = $"+5 sonar Radius, from {actor.GetComponent<Fighter>().Defense})";
+
+        foreach (Transform child in levelUpMenuContent.transform)
         {
-            eventSystem.SetSelectedGameObject(escapeMenu.transform.GetChild(0).gameObject);
+            child.GetComponent<ButtonManager>().onClick.RemoveAllListeners();
+
+            child.GetComponent<ButtonManager>().onClick.AddListener(() => {
+                if (constitutionButton == child.gameObject)
+                {
+                    actor.GetComponent<Level>().IncreaseMaxHp();
+                }
+                else if (strengthButton == child.gameObject)
+                {
+                    actor.GetComponent<Level>().IncreasePower();
+                }
+                else if (agilityButton == child.gameObject)
+                {
+                    actor.GetComponent<Level>().IncreaseDefense();
+                }
+                else if (sonarButton == child.gameObject)
+                {
+                    actor.GetComponent<Level>().IncreaseSonar();
+                }
+                else
+                {
+                    Debug.LogError("No button found!");
+                }
+                ToggleLevelUpMenu(actor);
+            });
         }
+
+        eventSystem.SetSelectedGameObject(levelUpMenuContent.transform.GetChild(0).gameObject);
+    }
+
+    public void ToggleCharacterInformationMenu(Actor actor = null)
+    {
+        isCharacterInformationMenuOpen = !isCharacterInformationMenuOpen;
+        SetBooleans(characterInformationMenu, isCharacterInformationMenuOpen);
+
+        if (actor is not null)
+        {
+            characterInformationMenu.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"Level: {actor.GetComponent<Level>().CurrentLevel}";
+            characterInformationMenu.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"XP: {actor.GetComponent<Level>().CurrentXp}";
+            characterInformationMenu.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"XP for next level: {actor.GetComponent<Level>().XpToNextLevel}";
+            characterInformationMenu.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = $"Attack: {actor.GetComponent<Fighter>().Power}";
+            characterInformationMenu.transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = $"Defense: {actor.GetComponent<Fighter>().Defense}";
+        }
+    }
+
+    private void SetBooleans(GameObject menu, bool menuBool)
+    {
+        isMenuOpen = menuBool;
+        menu.SetActive(menuBool);
     }
 
     public void Save()
     {
-        SaveManager.instance.SaveGame();
+        SaveManager.instance.SaveGame(false);
+        AddMessage("Information collected.", "#0da2ff");
     }
 
     public void Load()
     {
         SaveManager.instance.LoadGame();
+        AddMessage("Successfully loaded.", "#0da2ff");
         ToggleMenu();
     }
 
