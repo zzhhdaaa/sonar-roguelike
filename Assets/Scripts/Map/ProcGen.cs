@@ -173,6 +173,7 @@ sealed class ProcGen
     {
         int numberOfMonsters = Random.Range(0, maximumMonsters + 1);
         int numberOfItems = Random.Range(0, maximumItems + 1);
+        int currentFloor = SaveManager.instance.CurrentFloor;
 
         for (int monster = 0; monster < numberOfMonsters; monster++)
         {
@@ -191,13 +192,16 @@ sealed class ProcGen
                 }
             }
 
-            if (Random.value < 0.8f)
+            if (Random.value < Mathf.Max(0.6f, 1f - 1 / currentFloor))
             {
-                MapManager.instance.CreateEntity("Orc", new Vector2(monsterX, monsterY));
-            }
-            else
-            {
-                MapManager.instance.CreateEntity("Troll", new Vector2(monsterX, monsterY));
+                if (Random.value < 0.2f * Mathf.Pow(currentFloor, 0.3f))
+                {
+                    MapManager.instance.CreateEntity("Troll", new Vector2(monsterX, monsterY));
+                }
+                else
+                {
+                    MapManager.instance.CreateEntity("Orc", new Vector2(monsterX, monsterY));
+                }
             }
         }
 

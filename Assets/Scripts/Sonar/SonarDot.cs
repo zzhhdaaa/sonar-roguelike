@@ -14,7 +14,6 @@ public class SonarDot : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         SonarManager.instance.SonarUpdated.AddListener(UpdateDotColor);
         SonarManager.instance.SonarDownGrade.AddListener(DownGradeColor);
-        //SonarManager.instance.SonarUpdated += UpdateDotColor;
     }
 
     private void UpdateDotColor()
@@ -26,8 +25,6 @@ public class SonarDot : MonoBehaviour
         }
         else if (alpha < 0.01f)
         {
-            //SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
-            //SonarManager.instance.SonarDownGrade.RemoveListener(this.DownGradeColor);
             Destroy(gameObject);
         }
     }
@@ -40,16 +37,11 @@ public class SonarDot : MonoBehaviour
         }
         else if(Random.value < 0.5f)
         {
-            //SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
-            //SonarManager.instance.SonarDownGrade.RemoveListener(this.DownGradeColor);
             Destroy(gameObject);
             return;
         }
 
         alphaMin /= 2f;
-        //alphaDivider *= 2f;
-        Debug.Log(alphaMin);
-        //Debug.Log(alphaDivider);
         spriteRenderer.color = new Color(1, 1, 1, alpha);
     }
 }

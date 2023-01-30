@@ -9,6 +9,7 @@ public class Fighter : MonoBehaviour
     [SerializeField] private int maxHp, hp, defense, power;
     [SerializeField] private Actor target;
     [SerializeField] private MMFeedbacks meleeFeedbacks;
+    [SerializeField] private MMFeedbacks dieFeedbacks;
 
     public MMFeedbacks MeleeFeedbacks { get { return meleeFeedbacks; } }
 
@@ -49,6 +50,8 @@ public class Fighter : MonoBehaviour
             if (GetComponent<Player>())
             {
                 UIManager.instance.AddMessage("You died!", "#ff0000"); //Red
+                dieFeedbacks?.PlayFeedbacks();
+                UIManager.instance.ToggleRebornMenu();
             }
             else
             {

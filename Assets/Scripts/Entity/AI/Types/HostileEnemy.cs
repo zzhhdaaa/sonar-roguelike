@@ -8,6 +8,8 @@ public class HostileEnemy : AI
     [SerializeField] private Fighter fighter;
     [SerializeField] private bool isFighting;
 
+    public bool IsFighting { get { return isFighting; } set { isFighting = value; } }
+
     private void OnValidate()
     {
         fighter = GetComponent<Fighter>();

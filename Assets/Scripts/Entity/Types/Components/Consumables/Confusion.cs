@@ -27,23 +27,7 @@ public class Confusion : Consumable
                 continue;
             }
 
-            //if (target.TryGetComponent(out ConfusedEnemy confusedEnemy))
-            //{
-            //    if (confusedEnemy.TurnsRemaining > 0)
-            //    {
-            //        UIManager.instance.AddMessage($"The {target.name} is already confused.", "#0000ff");
-            //        consumer.GetComponent<Inventory>().SelectedConsumable = null;
-            //        consumer.GetComponent<Player>().ToggleTargetMode();
-            //        return false;
-            //    }
-            //}
-            //else
-            //{
-            //    confusedEnemy = target.gameObject.AddComponent<ConfusedEnemy>();
-            //}
-
             ConfusedEnemy confusedEnemy = target.gameObject.GetComponent<ConfusedEnemy>();
-            //confusedEnemy.PreviousAI = target.AI;
             confusedEnemy.TurnsRemaining = NumberOfTurns;
             confusedEnemy.BaitTargetPosition = transform.position;
 

@@ -39,7 +39,7 @@ public class Level : MonoBehaviour
         xpToNextLevel = ExperienceToNextLevel();
     }
 
-    public void IncreaseMaxHp(int amount = 20)
+    public void IncreaseMaxHp(int amount = 8)
     {
         GetComponent<Actor>().Fighter.MaxHp += amount;
         GetComponent<Actor>().Fighter.Hp += amount;
@@ -51,7 +51,7 @@ public class Level : MonoBehaviour
         IncreaseLevel();
     }
 
-    public void IncreasePower(int amount = 1)
+    public void IncreasePower(int amount = 2)
     {
         GetComponent<Actor>().Fighter.Power += amount;
 
@@ -66,6 +66,7 @@ public class Level : MonoBehaviour
         UIManager.instance.AddMessage($"Your movements are getting swifter!", "#00FF00"); //Green
         IncreaseLevel();
     }
+
     public void IncreaseSonar(int amount = 3)
     {
         SonarManager.instance.Distance += amount;

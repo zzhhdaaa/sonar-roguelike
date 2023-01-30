@@ -45,6 +45,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private bool isEscapeMenuOpen = false; //Read-only
     [SerializeField] private GameObject escapeMenu;
 
+    [Header("Reborn Menu UI")]
+    [SerializeField] private bool isRebornMenuOpen = false; //Read-only
+    [SerializeField] private GameObject rebornMenu;
+
     [Header("Character Information Menu UI")]
     [SerializeField] private bool isCharacterInformationMenuOpen = false; //Read-only
     [SerializeField] private GameObject characterInformationMenu;
@@ -123,6 +127,9 @@ public class UIManager : MonoBehaviour
                 case bool _ when isEscapeMenuOpen:
                     ToggleEscapeMenu();
                     break;
+                case bool _ when isRebornMenuOpen:
+                    ToggleRebornMenu();
+                    break;
                 case bool _ when isCharacterInformationMenuOpen:
                     ToggleCharacterInformationMenu();
                     break;
@@ -172,6 +179,14 @@ public class UIManager : MonoBehaviour
         isEscapeMenuOpen = escapeMenu.activeSelf;
 
         eventSystem.SetSelectedGameObject(escapeMenu.transform.GetChild(0).gameObject);
+    }
+    public void ToggleRebornMenu()
+    {
+        rebornMenu.SetActive(!rebornMenu.activeSelf);
+        isMenuOpen = rebornMenu.activeSelf;
+        isRebornMenuOpen = rebornMenu.activeSelf;
+
+        eventSystem.SetSelectedGameObject(rebornMenu.transform.GetChild(0).gameObject);
     }
 
     public void ToggleLevelUpMenu(Actor actor)
@@ -257,9 +272,30 @@ public class UIManager : MonoBehaviour
         ToggleMenu();
     }
 
+    public void Reborn()
+    {
+        SaveManager.instance.SaveGame();
+
+        if (SaveManager.instance.HasSaveAvailable())
+        {
+            SaveManager.instance.DeleteSave();
+        }
+
+        SaveManager.instance.CurrentFloor = 1;
+
+        GameManager.instance.Reset(true);
+        MapManager.instance.GenerateDungeon(true);
+
+        UIManager.instance.AddMessage("Reborn.", "#0da2ff");
+        UIManager.instance.SetDungeonFloorText(SaveManager.instance.CurrentFloor);
+
+        ToggleMenu();
+
+        SonarManager.instance.SonarDownGrade?.Invoke();
+    }
+
     public void Quit()
     {
-        //SceneManager.LoadScene(0);
         Application.Quit();
     }
 

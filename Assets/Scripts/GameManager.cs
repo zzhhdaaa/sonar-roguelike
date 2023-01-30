@@ -84,6 +84,21 @@ public class GameManager : MonoBehaviour
         if (actors[actorNum].GetComponent<Player>())
         {
             isPlayerTurn = false; //stop player turn
+
+            Player player = actors[actorNum].GetComponent<Player>();
+
+            StartCoroutine(TurnDelay(baseTime*2f/player.MoveKeyDownTurns)); //each turn has 0.1 sec delay, and then start next turn
+
+            if (actorNum == actors.Count - 1)
+            {
+                actorNum = 0; //rolling back to the start of the entity list
+            }
+            else
+            {
+                actorNum++; //next entity in the list
+            }
+
+            return;
         }
 
         if (actorNum == actors.Count - 1)

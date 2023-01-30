@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     /// </summary>
     private Controls controls;
     [SerializeField] private bool moveKeyDown;
+    [SerializeField] private int moveKeyDownTurns = 1;
     [SerializeField] private bool targetMode;
     [SerializeField] private bool isSingleTarget;
     [SerializeField] private GameObject targetObject;
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private MMFeedbacks stairUpFeedbacks;
 
     public MMFeedbacks StairUpFeedbacks { get { return stairUpFeedbacks; } }
+    public int MoveKeyDownTurns { get { return moveKeyDownTurns; } }
 
     private void Awake()
     {
@@ -50,10 +52,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (context.started && GetComponent<Actor>().IsAlive)
         {
             moveKeyDown = true;
+            moveKeyDownTurns = 1;
         }
         else if (context.canceled)
         {
             moveKeyDown = false;
+            moveKeyDownTurns = 1;
         }
     }
 
@@ -191,7 +195,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
         if (targetMode)
         {
-            futurePosition = targetObject.transform.position + (Vector3)roundedDirection;
+            futurePosition = targetObject.transform.position + (Vector3)roundedDirection.normalized * Time.deltaTime * (2 + Mathf.Min(moveKeyDownTurns, 38));
         }
         else
         {
@@ -208,6 +212,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             moveKeyDown = Action.BumpAction(GetComponent<Actor>(), roundedDirection, true); //if bump into an entity, moveKeyDown is set to false
         }
+
+        moveKeyDownTurns += 1;
     }
 
     public void ToggleTargetMode(bool isArea = false, int radius = 1)

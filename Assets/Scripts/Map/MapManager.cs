@@ -85,6 +85,7 @@ public class MapManager : MonoBehaviour
         Camera.main.orthographicSize = 27;
 
     }
+
     public void GenerateDungeon(bool isNewGame = false)
     {
         if (floorMap.cellBounds.size.x > 0)
@@ -99,6 +100,8 @@ public class MapManager : MonoBehaviour
         }
 
         ProcGen procGen = new ProcGen();
+        maxMonstersPerRoom = 1 + (int)Mathf.Pow(SaveManager.instance.CurrentFloor, 0.5f);
+        Debug.Log($"Max monsters per room: {maxMonstersPerRoom}");
         procGen.GenerateDungeon(width, height, roomMaxSize, roomMinSize, maxRooms, maxMonstersPerRoom, maxItemsPerRoom, rooms, isNewGame);
 
         AddTilemapToDictionary(floorMap);
