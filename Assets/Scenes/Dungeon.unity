@@ -1999,6 +1999,9 @@ MonoBehaviour:
   SonarUpdated:
     m_PersistentCalls:
       m_Calls: []
+  SonarDownGrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1009966227
 Transform:
   m_ObjectHideFlags: 0
@@ -2058,7 +2061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb2c41aefc3feb24cb5e75e0a11dac1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTime: 0.1
+  baseTime: 0.075
   delayTime: 0
   isPlayerTurn: 1
   actorNum: 0

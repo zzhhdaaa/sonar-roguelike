@@ -26,8 +26,8 @@ public class SonarDot : MonoBehaviour
         }
         else if (alpha < 0.01f)
         {
-            SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
-            SonarManager.instance.SonarDownGrade.RemoveListener(this.DownGradeColor);
+            //SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
+            //SonarManager.instance.SonarDownGrade.RemoveListener(this.DownGradeColor);
             Destroy(gameObject);
         }
     }
@@ -40,8 +40,8 @@ public class SonarDot : MonoBehaviour
         }
         else if(Random.value < 0.5f)
         {
-            SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
-            SonarManager.instance.SonarDownGrade.RemoveListener(this.DownGradeColor);
+            //SonarManager.instance.SonarUpdated.RemoveListener(this.UpdateDotColor);
+            //SonarManager.instance.SonarDownGrade.RemoveListener(this.DownGradeColor);
             Destroy(gameObject);
             return;
         }

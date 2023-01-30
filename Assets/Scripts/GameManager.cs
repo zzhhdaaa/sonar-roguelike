@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("Time")]
-    [SerializeField] private float baseTime = 0.1f;
+    [SerializeField] private float baseTime;
     [SerializeField] private float delayTime;
     [SerializeField] private bool isPlayerTurn = true;
 
@@ -95,12 +95,12 @@ public class GameManager : MonoBehaviour
             actorNum++; //next entity in the list
         }
 
-        StartCoroutine(TurnDelay()); //each turn has 0.1 sec delay, and then start next turn
+        StartCoroutine(TurnDelay(baseTime/actors.Count)); //each turn has 0.1 sec delay, and then start next turn
     }
 
-    private IEnumerator TurnDelay()
+    private IEnumerator TurnDelay(float delay)
     {
-        yield return new WaitForSeconds(delayTime);
+        yield return new WaitForSeconds(delay);
         StartTurn();
     }
 
@@ -130,19 +130,19 @@ public class GameManager : MonoBehaviour
     public void AddActor(Actor actor)
     {
         actors.Add(actor);
-        delayTime = SetTime();
+        //delayTime = SetTime();
     }
 
     public void InsertActor(Actor actor, int index)
     {
         actors.Insert(index, actor);
-        delayTime = SetTime();
+        //delayTime = SetTime();
     }
 
     public void RemoveActor(Actor actor)
     {
         actors.Remove(actor);
-        delayTime = SetTime();
+        //delayTime = SetTime();
     }
 
     public void RefreshPlayer()

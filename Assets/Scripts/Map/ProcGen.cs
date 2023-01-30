@@ -16,6 +16,7 @@ sealed class ProcGen
             int roomWidth = Random.Range(roomMinSize, roomMaxSize);
             int roomHeight = Random.Range(roomMinSize, roomMaxSize);
 
+            //the first room
             if (roomNum == 0)
             {
                 roomWidth = 15;
@@ -92,12 +93,14 @@ sealed class ProcGen
                     GameManager.instance.Actors[0].GetComponent<Player>().StartCoroutine(GameManager.instance.Actors[0].GetComponent<Player>().WaitToBorn(0.8f));
                 }
 
-                //MapManager.instance.CreateEntity("Player", newRoom.Center());
-                MapManager.instance.CreateEntity("Sonar Explosion", newRoom.Center() + new Vector2Int(4, 4));
-                MapManager.instance.CreateEntity("Sonar Bait", newRoom.Center() + new Vector2Int(-4, -4));
-                MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(4, -4));
-                MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(-4, 4));
-                //SonarManager.instance.SonarDetect((Vector3Int)newRoom.Center());
+                if (Random.value < 0.4f)
+                    MapManager.instance.CreateEntity("Sonar Explosion", newRoom.Center() + new Vector2Int(4, 4));
+                if (Random.value < 0.6f)
+                    MapManager.instance.CreateEntity("Sonar Bait", newRoom.Center() + new Vector2Int(-4, -4));
+                if (Random.value < 0.5f)
+                    MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(4, -4));
+                if (Random.value < 0.5f)
+                    MapManager.instance.CreateEntity("Healing Potion", newRoom.Center() + new Vector2Int(-4, 4));
             }
 
             rooms.Add(newRoom);
@@ -222,7 +225,7 @@ sealed class ProcGen
             }
 
             float randomValue = Random.value;
-            Debug.Log(randomValue);
+            //Debug.Log(randomValue);
             if (randomValue < 0.4f)
             {
                 MapManager.instance.CreateEntity("Healing Potion", new Vector2(itemX, itemY));

@@ -5024,7 +5024,6 @@ GameObject:
   - component: {fileID: 4985208296160980197}
   - component: {fileID: 5542194690389450522}
   - component: {fileID: 4111311753868699073}
-  - component: {fileID: 7563030656271370884}
   - component: {fileID: 7437144012325289817}
   - component: {fileID: 1470410867485978374}
   m_Layer: 0
@@ -5062,12 +5061,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Feedbacks:
+  - {fileID: 1567313830063801209}
   - {fileID: 1470410867485978374}
   - {fileID: 5542194690389450522}
   - {fileID: 4985208296160980197}
-  - {fileID: 1567313830063801209}
   - {fileID: 4111311753868699073}
-  - {fileID: 7563030656271370884}
   - {fileID: 7437144012325289817}
   InitializationMode: 2
   SafeMode: 3
@@ -5173,18 +5171,18 @@ MonoBehaviour:
     Quantized: 0
     TargetBPM: 120
   DebugActive: 0
-  Sfx: {fileID: 8300000, guid: 81aa19699455c0c4f9dd8d95ec0de826, type: 3}
+  Sfx: {fileID: 8300000, guid: 269a80532105fae49b05262f29cf584f, type: 3}
   RandomSfx: []
   TestButton: 0
   TestStopButton: 0
   PlayMethod: 1
   PoolSize: 10
-  MinVolume: 0.75
-  MaxVolume: 0.75
-  MinPitch: 1
-  MaxPitch: 1
+  MinVolume: 100
+  MaxVolume: 100
+  MinPitch: 0.9
+  MaxPitch: 1.1
   SfxAudioMixerGroup: {fileID: 0}
-  Priority: 128
+  Priority: 96
 --- !u!114 &4985208296160980197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5538,91 +5536,6 @@ MonoBehaviour:
   RandomParticleSystems: []
   MoveToPosition: 0
   ActivateOnPlay: 0
---- !u!114 &7563030656271370884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5697537480345270348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81be29129249cad49a2c50cf8eb77cc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Active: 1
-  Label: Audio Filter High Pass
-  Chance: 100
-  Timing:
-    TimescaleMode: 0
-    ExcludeFromHoldingPauses: 0
-    ContributeToTotalDuration: 1
-    InitialDelay: 0
-    CooldownDuration: 0
-    InterruptsOnStop: 1
-    NumberOfRepeats: 0
-    RepeatForever: 0
-    DelayBetweenRepeats: 1
-    MMFeedbacksDirectionCondition: 0
-    PlayDirection: 0
-    ConstantIntensity: 0
-    UseIntensityInterval: 0
-    IntensityIntervalMin: 0
-    IntensityIntervalMax: 0
-    Sequence: {fileID: 0}
-    TrackID: 0
-    Quantized: 0
-    TargetBPM: 120
-  DebugActive: 0
-  Channel: 0
-  Duration: 0.35
-  ResetShakerValuesAfterShake: 1
-  ResetTargetValuesAfterShake: 1
-  RelativeHighPass: 0
-  ShakeHighPass:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 5.0253015
-      outSlope: 5.0253015
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.039927404
-    - serializedVersion: 3
-      time: 0.08158165
-      value: 0.9256991
-      inSlope: 0.7321166
-      outSlope: 0.7321166
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.22142197
-    - serializedVersion: 3
-      time: 0.8103449
-      value: 0.9935275
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -9.250196
-      outSlope: -9.250196
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.15311019
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  RemapHighPassZero: 0
-  RemapHighPassOne: 5000
 --- !u!114 &7437144012325289817
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -174,7 +174,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (!UIManager.instance.IsMenuOpen)
         {

@@ -26,7 +26,7 @@ public class Consumable : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
         consumer.Inventory.Items.Remove(GetComponent<Item>());
         GameManager.instance.RemoveEntity(GetComponent<Item>());
-        StartCoroutine(waitToDestroy(0.5f));
+        StartCoroutine(waitToDestroy(1.5f));
     }
 
     private IEnumerator waitToDestroy(float time)
