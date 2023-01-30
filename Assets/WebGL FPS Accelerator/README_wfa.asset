@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d98ce5c7f0f8ad44a1bc9b1d6100230, type: 3}
+  m_Name: README_wfa
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 08f6616a7709f244fa43973352f3db1a, type: 3}
+  title: WebGL FPS Accelerator
+  sections:
+  - heading: IF YOUR PROJECT DOES NOT HAVE THESE PACKAGES, PLEASE INSTALL FROM "PACKAGE
+      MANAGER";
+    text: 
+    linkText: 
+    url: 
+  - heading: 'DEPENDENCIES OF THE ASSET:
+
+      - "POST PROCESSING"
+
+      - "TEXT
+      MESH PRO"'
+    text: 
+    linkText: 
+    url: 
+  - heading: _________________________________
+    text: 
+    linkText: 
+    url: 
+  - heading: What's WebGL FPS Accelerator?
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: WebGL FPS Accelerator (WFA) is a "Dynamic Resolution System" and an advanced
+      "DPI Control System" for WebGL that improves the FPS of your game. WebGL FPS
+      Accelerator allows you to provide a balance between performance (FPS) and image
+      quality (DPI).
+    linkText: 
+    url: 
+  - heading: How It Works?
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: Dynamic Resolution System allows you to dynamically adjust DPI-Render Scale,
+      to reduce workload on the GPU. In cases where the application's frame rate
+      reduces, WFA will gradually scale down the resolution to maintain a consistent
+      frame rate instead.
+    linkText: 
+    url: 
+  - heading: Quick Start
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: Add "webglFpsAcceleratorPrefab" to your scene. And That's All! You can
+      find this prefab in "Assets/WebGL FPS Accelerator".
+    linkText: 
+    url: 
+  - heading: What's Next?
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: You can set the target FPS range with parameters "fpsMax" and "fpsMin"
+      on the inspector or on in-game UI. The system will set DPI-resolution to catch
+      this FPS range dynamically.
+    linkText: 
+    url: 
+  - heading: Description of WebGL FPS Accelerator Parameters
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: '- dynamicResolutionSystem: If this parameter is True then you can choose
+      the desired FPS range and WFA will dynamically adjust DPI-resolution to match
+      the best FPS according to the DPI range specified.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- DPI (dots per inch): Current image resolution. If "dynamicResolutionSystem"
+      is False, then you can set this value to catch your desired FPS.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- FPS Range (fpsMin-fpsMax): Your desired target FPS range.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- dpiIncrease: Controls the speed of DPI-image resolution decrease, which
+      occurs when FPS are below the fpsMin parameter.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- dpiDecrease: Controls the speed of DPI-image resolution increase, which
+      occurs when FPS are above the fpsMax parameter.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- dpiMin: this setting allows you to decide the minimum image resolution.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- dpiMax: this setting allows you to decide the maximum image resolution.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- Measure Period: For example, if this value is 2, per 2 seconds, WFA
+      changes image resolution according to the average FPS of last 2 seconds if
+      it is necessary.'
+    linkText: 
+    url: 
+  - heading: 
+    text: '- useRenderScaleURP: If the project is using Universal Render Pipeline,
+      then you can enable this method. If this bool is True, WFA will use the "Render
+      Scale" parameter of the render pipeline to adjust resolution. An advantage
+      of this method is that downsampling does not affect the UI objects.'
+    linkText: 
+    url: 
+  - heading: FAQ (Frequently Asked Questions)
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: --- Why am I getting errors about "Post Processing" or "Text Mesh Pro?"
+    linkText: 
+    url: 
+  - heading: 
+    text: You need to install these packages. Because these are dependencies of the
+      asset. This will fix errors.
+    linkText: 
+    url: 
+  - heading: 
+    text: --- What happens if I keep the fpsMin and fpsMax settings very close together?
+    linkText: 
+    url: 
+  - heading: 
+    text: It depends on "dpiIncrease-dpiDecrease". For example, if dpiIncrease is
+      "1", and if this amount changes FPS more than 5 fps (e.g. 7), then the target
+      FPS range could be 7 or 8. Because if the target FPS range is smaller than
+      7 (e.g. 30-32), then the plugin cannot enter that range sometimes, and it has
+      to work forever with a loop of increasing-decreasing. For example, if the current
+      FPS is 28, after DPI increase it can be 35 with extra 7 FPS, but this time,
+      plugin will try to decrease DPI again because 35 is bigger than 30-32 range,
+      and FPS will be 28 again, and the plugin will try to increase DPI again. This
+      can make a loop forever. AND THIS MAY CAUSE GETTING SPIKES AND DROPS.
+    linkText: 
+    url: 
+  - heading: 
+    text: --- How Can I Hide In-Game UI?
+    linkText: 
+    url: 
+  - heading: 
+    text: "You can use \"showHideUI\" bool to enable-disable In-Game UI on Inspector
+      on \u201CwebglFpsAcceleratorManager\u201D object."
+    linkText: 
+    url: 
+  - heading: 
+    text: --- The frame rate is the same with the asset or without. What is the problem?
+    linkText: 
+    url: 
+  - heading: 
+    text: '- If your frame rate is in "target fps range", the plugin will not do
+      anything. Try to change fpsMin-fpsMax parameters.
+
+      - You can disable
+      "dynamic resolution" mode, and you can change DPI manually, to see if there
+      is a difference. You should see downsampling on resolution. If you see down
+      sampling but no difference on Frame Rate, you can try on different devices.
+      If the graphics performance of the device is good or your project has low FPS
+      because of the "CPU load", you may not see much difference.'
+    linkText: 
+    url: 
+  - heading: Additional Support & Questions
+    text: 
+    linkText: 
+    url: 
+  - heading: 
+    text: 'This works only on WEBGL BUILDS. NOT ON EDITOR. So build your project
+      to test.
+
+      If you have any issue using WFA, please send an email to'
+    linkText: 
+    url: 
+  - heading: 
+    text: 
+    linkText: agnosia.developer@outlook.com
+    url: mailto:agnosia.developer@outlook.com
+  loadedLayout: 1
